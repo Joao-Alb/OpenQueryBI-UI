@@ -1,0 +1,19 @@
+mediators/*
+!mediators/.gitkeep
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+.vscode/
+
+.ipynb
+
+servers/*/

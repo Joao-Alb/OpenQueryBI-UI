@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "WeatherAPI": {
+      "transport": "sse",
+      "url": "http://mcpserver1:8000/sse",
+      "timeout": 600,
+      "headers": null,
+      "sse_read_timeout": 900
+    },
+    "CurrencyAPI": {
+      "transport": "sse",
+      "url": "http://mcpserver2:8001/sse",
+      "timeout": 600,
+      "headers": null,
+      "sse_read_timeout": 900
+    }
+  }
+}
