@@ -1,0 +1,21 @@
+[server]
+port=8501 # change port number. By default streamlit uses 8501 port
+headless=true # This will eliminate automatically open browser
+enableCORS=false 
+enableXsrfProtection=false 
+enableWebsocketCompression=false
+enableStaticServing = true
+
+[browser] # This ip and port will show in command prompt
+#serverAddress = " "
+serverPort = 8501
+gatherUsageStats = false
+
+[theme]
+primaryColor="#2F2E78"
+backgroundColor="#FFFFFF"
+secondaryBackgroundColor="#F0F2F6"
+textColor="#31333F"
+font="sans serif"
+
+
