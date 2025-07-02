@@ -16,4 +16,4 @@ wheels/
 
 .ipynb
 
-servers/*/
+servers/server*/

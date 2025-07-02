@@ -1,0 +1,3 @@
+[submodule "servers/OpenQueryBI"]
+	path = servers/OpenQueryBI
+	url = https://github.com/Joao-Alb/OpenQueryBI.git
