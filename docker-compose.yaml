@@ -20,6 +20,3 @@ services:
       - "8501:8501"
     command: >
       streamlit run app.py
-    depends_on:
-      - mcpserver1
-      - mcpserver2
