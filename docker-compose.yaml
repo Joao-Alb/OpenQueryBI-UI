@@ -1,23 +1,14 @@
 version: "3.9"
 
 services:
-  mcpserver1:
-    build: ./servers/server1
-    container_name: mcpserver_1
+  openquerybi:
+    build: ./servers/OpenQueryBI
+    container_name: openquerybi
     restart: always
     volumes:
-      - ./servers/server1:/app
+      - ./servers/OpenQueryBI:/app
     ports:
-      - "8000:8000"
-  
-  mcpserver2:
-    build: ./servers/server2
-    container_name: mcpserver_2
-    restart: always
-    volumes:
-      - ./servers/server2:/app
-    ports:
-      - "8001:8001"
+      - "8002:8002"
 
   hostclient:
     build: ./client
