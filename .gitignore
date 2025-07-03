@@ -17,3 +17,5 @@ wheels/
 .ipynb
 
 servers/server*/
+
+.env
