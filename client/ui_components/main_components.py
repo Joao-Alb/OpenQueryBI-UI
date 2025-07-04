@@ -11,3 +11,12 @@ def display_tool_executions():
                 st.markdown(f"**Output:** ```{exec_record['output'][:250]}...```")
                 st.markdown(f"**Time:** {exec_record['timestamp']}")
                 st.divider()
+
+def format_ai_output(content:list)->str:
+    formated = ""
+    for message in content:
+        if message["type"] == "text":
+            formated += message['text']+"\n\n\n\n"
+        elif message["type"] == "tool_use":
+            formated += f"Using tool {message['name']} with the following inputs: {message['input']}\n"
+    return formated or "didmnt work"

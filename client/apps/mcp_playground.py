@@ -8,7 +8,7 @@ from services.chat_service import get_current_chat, _append_message_to_session
 from utils.async_helpers import run_async
 from utils.ai_prompts import make_system_prompt, make_main_prompt
 import ui_components.sidebar_components as sd_compents
-from  ui_components.main_components import display_tool_executions
+from  ui_components.main_components import display_tool_executions,format_ai_output
 from config import DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE
 import traceback
 
@@ -114,7 +114,7 @@ def main():
                             else:  # AIMessage
                                 if hasattr(msg, "content") and msg.content:
                                     with messages_container.chat_message("assistant"):
-                                        output = str(msg.content)
+                                        output = format_ai_output(msg.content) if type([])==type(msg.content) else str(msg.content)
                                         st.markdown(output)
                     response_dct = {"role": "assistant", "content": output}
                 # Fall back to regular stream response if agent not available
