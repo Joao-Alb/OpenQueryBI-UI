@@ -1,19 +1,5 @@
 {
   "mcpServers": {
-    "WeatherAPI": {
-      "transport": "sse",
-      "url": "http://mcpserver1:8003/sse",
-      "timeout": 600,
-      "headers": null,
-      "sse_read_timeout": 900
-    },
-    "CurrencyAPI": {
-      "transport": "sse",
-      "url": "http://mcpserver2:8001/sse",
-      "timeout": 600,
-      "headers": null,
-      "sse_read_timeout": 900
-    },
     "OpenQueryBI": {
       "transport": "sse",
       "url": "http://openquerybi:8002/sse",
