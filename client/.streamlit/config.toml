@@ -12,10 +12,7 @@ serverPort = 8501
 gatherUsageStats = false
 
 [theme]
-primaryColor="#2F2E78"
-backgroundColor="#FFFFFF"
-secondaryBackgroundColor="#F0F2F6"
-textColor="#31333F"
+base="auto"
 font="sans serif"
 
 
