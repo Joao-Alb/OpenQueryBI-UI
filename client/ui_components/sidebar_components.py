@@ -5,6 +5,7 @@ from services.mcp_service import connect_to_mcp_servers
 from services.chat_service import create_chat, delete_chat
 from utils.tool_schema_parser import extract_tool_parameters
 from utils.async_helpers import reset_connection_state
+from utils.secrets import get_key
 
 
 def create_history_chat_container():
@@ -81,7 +82,7 @@ def create_provider_select_widget():
                 params['aws_secret_key'] = st.text_input("AWS Secret Key", value=params.get('aws_secret_key'), type="password", key="aws_secret_key")
         else:
             with st.expander("🔐 API Key", expanded=True):
-                params['api_key'] = st.text_input(f"{selected_provider} API Key", value=params.get('api_key'), type="password", key="api_key")
+                params['api_key'] = get_key(str(selected_provider).upper())
     
 
 def create_advanced_configuration_widget():
