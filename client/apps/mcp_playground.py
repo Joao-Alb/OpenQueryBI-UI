@@ -1,4 +1,4 @@
-import os
+import json
 import datetime
 import streamlit as st
 from langchain_core.messages import HumanMessage, ToolMessage
@@ -11,7 +11,7 @@ import ui_components.sidebar_components as sd_compents
 from  ui_components.main_components import display_tool_executions,format_ai_output, plot_from_sql
 from config import DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE
 import traceback
-
+import pandas as pd
 
 def main():
     with st.sidebar:
@@ -43,6 +43,10 @@ def main():
     sd_compents.create_advanced_configuration_widget()
     sd_compents.create_mcp_connection_widget()
     sd_compents.create_mcp_tools_widget()
+
+# ------------------------------------------------------------------ Graphs data
+    if "data" not in st.session_state:
+        st.session_state.data = pd.DataFrame({"x": [], "y": []})
 
 # ------------------------------------------------------------------ Main Logic
     if user_text is None:  # nothing submitted yet
@@ -112,8 +116,7 @@ def main():
                                     st.code(tool_message, language='yaml')
                                     _append_message_to_session({'role': 'assistant', 'tool': tool_message, })
                                     if "plot_from_sql" in msg.name:
-                                        pass
-                                        #plot_from_sql(msg.content)
+                                        plot_from_sql(json.loads(msg.content),st.session_state.data)
                             else:  # AIMessage
                                 if hasattr(msg, "content") and msg.content:
                                     with messages_container.chat_message("assistant"):
