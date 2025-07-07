@@ -21,10 +21,10 @@ def create_llm_model(llm_provider: str, **kwargs):
             model=MODEL_OPTIONS['OpenAI'],
             temperature=kwargs.get('temperature', 0.7),
         )
-    elif llm_provider == "Antropic":
+    elif llm_provider == "Anthropic":
         return ChatAnthropic(
             anthropic_api_key=params.get("api_key"),
-            model=MODEL_OPTIONS['Antropic'],
+            model=MODEL_OPTIONS['Anthropic'],
             temperature=kwargs.get('temperature', 0.7),
         )
     elif llm_provider == "Bedrock":
