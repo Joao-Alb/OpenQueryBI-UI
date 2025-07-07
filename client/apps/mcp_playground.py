@@ -8,7 +8,7 @@ from services.chat_service import get_current_chat, _append_message_to_session
 from utils.async_helpers import run_async
 from utils.ai_prompts import make_system_prompt, make_main_prompt
 import ui_components.sidebar_components as sd_compents
-from  ui_components.main_components import display_tool_executions,format_ai_output
+from  ui_components.main_components import display_tool_executions,format_ai_output, plot_from_sql
 from config import DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE
 import traceback
 
@@ -111,6 +111,9 @@ def main():
                                     tool_message = f"**ToolMessage - {tool_count} ({msg.name}):** \n" + msg.content
                                     st.code(tool_message, language='yaml')
                                     _append_message_to_session({'role': 'assistant', 'tool': tool_message, })
+                                    if "plot_from_sql" in msg.name:
+                                        pass
+                                        #plot_from_sql(msg.content)
                             else:  # AIMessage
                                 if hasattr(msg, "content") and msg.content:
                                     with messages_container.chat_message("assistant"):
