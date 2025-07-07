@@ -63,12 +63,7 @@ functions ={
 def plot_from_sql(configs:dict):
     """Plot a bar chart from a SQL query using Streamlit. This will create a bar chart with the x and y values.
     """
-    df = get_dataframe_from_sql(database_path,query,limit)
+    df = get_dataframe_from_sql(configs['database_path'],configs['query'],configs['limit'])
     if configs['x'] not in df.columns or configs['y'] not in df.columns:
         raise ValueError(f"Columns {configs['x']} and {configs['y']} must be present in the dataframe.")
-    
-    while True:
-        st.empty()  # clear old content
-        return functions[configs['type']](df.set_index(configs['x'])[configs['y']])
-        time.sleep(configs['update_interval'])
-        st.rerun()
+    return functions[configs['type']](configs['database_path'], configs['query'], configs['x'], configs['y'], configs['limit'])
