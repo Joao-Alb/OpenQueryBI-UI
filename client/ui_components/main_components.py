@@ -23,47 +23,63 @@ def format_ai_output(content:list)->str:
 
 
 import pandas as pd 
-import sqlite3
-from time import time
-def get_dataframe_from_sql(database_path:str,query:str,limit:int=100):
+from sqlalchemy import create_engine,text
+
+def __query(query: str, database_info:dict):
+    if database_info['dialect'] == "sqlite":
+        connection_url = f"sqlite:///{database_info['database']}"
+    
+    else:
+       connection_url = (
+        f"{database_info['dialect']}://{database_info['username']}:{database_info['password']}"
+        f"@{database_info['host']}:{database_info['port']}/{database_info['database']}"
+    )
+
+    engine = create_engine(connection_url)
+
+    with engine.connect() as conn:
+        result = conn.execute(text(query))
+        return result.fetchall(),list(result.keys())
+
+def get_dataframe_from_sql(database_info:dict,query:str,limit:int=100):
     """Get a dataframe from a SQL query. This will return a dataframe with the result of the query.
     """
     if "limit" not in query.lower():
         query = f"{query} LIMIT {limit}"
-    conn = sqlite3.connect(database_path)
-    cursor = conn.cursor()
-    cursor.execute(query)
-    result = cursor.fetchall()
-    columns = [column[0] for column in cursor.description]
-    conn.close()
+    result,columns = __query(query,database_info)
     return pd.DataFrame(result, columns=columns)
 
-def plot_line_from_sql(database_path:str,query:str,x:str,y:str,limit:int=100):
+def plot_line_from_sql(data,x:str,y:str):
     """Plot a line chart from a SQL query. This will create a line chart with the x and y values.
     """
-    df = get_dataframe_from_sql(database_path,query,limit)
-    if x not in df.columns or y not in df.columns:
+    if x not in data.columns or y not in data.columns:
         raise ValueError(f"Columns {x} and {y} must be present in the dataframe.")
-    return st.line_chart(df.set_index(x)[y])
+    return st.line_chart(data.set_index(x)[y])
 
-def plot_bar_from_sql(database_path:str,query:str,x:str,y:str,limit:int=100):
+def plot_bar_from_sql(data,x:str,y:str):
     """Plot a bar chart from a SQL query using Streamlit. This will create a bar chart with the x and y values.
     """
-    df = get_dataframe_from_sql(database_path,query,limit)
-    st.write(df)
-    if x not in df.columns or y not in df.columns:
+    if x not in data.columns or y not in data.columns:
         raise ValueError(f"Columns {x} and {y} must be present in the dataframe.")
-    return st.bar_chart(df.set_index(x)[y])
+    return st.bar_chart(data.set_index(x)[y])
 
 functions ={
     "line":plot_line_from_sql,
     "bar":plot_bar_from_sql
 }
 
-def plot_from_sql(configs:dict):
+def plot_from_sql(configs:dict,data):
     """Plot a bar chart from a SQL query using Streamlit. This will create a bar chart with the x and y values.
     """
-    df = get_dataframe_from_sql(configs['database_path'],configs['query'],configs['limit'])
-    if configs['x'] not in df.columns or configs['y'] not in df.columns:
+    if configs['x'] not in data.columns or configs['y'] not in data.columns:
         raise ValueError(f"Columns {configs['x']} and {configs['y']} must be present in the dataframe.")
-    return functions[configs['type']](configs['database_path'], configs['query'], configs['x'], configs['y'], configs['limit'])
+    return functions[configs['type']](data, configs['x'], configs['y'])
+
+class Graph():
+    data:pd.DataFrame = None
+    configs: dict
+    state: bool = True
+
+    def __init__(self,configs, data=None):
+        self.data = data or self.data
+        self.configs = configs
