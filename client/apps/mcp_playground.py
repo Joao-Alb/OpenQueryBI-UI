@@ -8,7 +8,7 @@ from services.chat_service import get_current_chat, _append_message_to_session
 from utils.async_helpers import run_async
 from utils.ai_prompts import make_system_prompt, make_main_prompt
 import ui_components.sidebar_components as sd_compents
-from  ui_components.main_components import display_tool_executions,format_ai_output, plot_from_sql
+from  ui_components.main_components import display_tool_executions,format_ai_output, plot_from_sql, get_dataframe_from_sql, Graph
 from config import DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE
 import traceback
 import pandas as pd
@@ -44,9 +44,9 @@ def main():
     sd_compents.create_mcp_connection_widget()
     sd_compents.create_mcp_tools_widget()
 
-# ------------------------------------------------------------------ Graphs data
-    if "data" not in st.session_state:
-        st.session_state.data = pd.DataFrame({"x": [], "y": []})
+# ------------------------------------------------------------------ Graphs data variable
+    if "graphs" not in st.session_state:
+        st.session_state.graphs = []
 
 # ------------------------------------------------------------------ Main Logic
     if user_text is None:  # nothing submitted yet
@@ -116,7 +116,8 @@ def main():
                                     st.code(tool_message, language='yaml')
                                     _append_message_to_session({'role': 'assistant', 'tool': tool_message, })
                                     if "plot_from_sql" in msg.name:
-                                        plot_from_sql(json.loads(msg.content),st.session_state.data)
+                                        graph = Graph(json.loads(msg.content))
+                                        st.session_state.graphs.append(graph)
                             else:  # AIMessage
                                 if hasattr(msg, "content") and msg.content:
                                     with messages_container.chat_message("assistant"):
@@ -145,3 +146,19 @@ def main():
         _append_message_to_session(response_dct)
             
     display_tool_executions()
+
+    # ------------------------------------------------------------------ Create/Update Graphs
+    import threading
+    from time import sleep
+
+    def update_data(index):
+        graph = st.session_state.graphs[index]
+        while graph.state:
+            graph.data = get_dataframe_from_sql(graph.configs["database_configs"],graph.configs["query"],graph.configs["limit"])
+            sleep(graph.configs["update_interval"])
+
+    for index,graph in enumerate(st.session_state.graphs):
+        if graph.data is None:
+            graph.data = get_dataframe_from_sql(graph.configs["database_configs"],graph.configs["query"],graph.configs["limit"])        
+        plot_from_sql(graph.configs,graph.data)
+        update_data(index)
