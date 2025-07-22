@@ -20,18 +20,23 @@ def display_graph_history():
 
     def time_to_update(graph):
         return time() - graph.last_updated >= graph.configs["update_interval"]
+    
+    def display_all_graphs():
+        with st.expander(f"Graph history", expanded=False):
+            for index, graph in enumerate(st.session_state.graphs):
+                update_data(index)
+                plot_from_sql(graph.configs, graph.data)
+                st.divider()
+                graph.last_updated = time()
+    
+    display_all_graphs()
 
     while True:
         for index,graph in enumerate(st.session_state.graphs):
             if not graph.state or not time_to_update(graph):
                 continue
             graph.last_updated = time()
-            if graph.data is None:
-                update_data(index)
-                with st.expander("Graph History", expanded=False):      
-                    plot_from_sql(graph.configs,graph.data)
-            else:
-                update_data(index)
+            update_data(index)
 
 def format_ai_output(content:list)->str:
     formated = ""
