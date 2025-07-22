@@ -8,7 +8,7 @@ from services.chat_service import get_current_chat, _append_message_to_session
 from utils.async_helpers import run_async
 from utils.ai_prompts import make_system_prompt, make_main_prompt
 import ui_components.sidebar_components as sd_compents
-from  ui_components.main_components import display_tool_executions,format_ai_output, plot_from_sql, get_dataframe_from_sql, Graph
+from  ui_components.main_components import display_tool_executions,format_ai_output, Graph, display_graph_history
 from config import DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE
 import traceback
 import pandas as pd
@@ -148,23 +148,4 @@ def main():
     display_tool_executions()
 
     # ------------------------------------------------------------------ Create/Update Graphs
-    import threading
-    from time import time
-
-    def update_data(index):
-        graph = st.session_state.graphs[index]
-        graph.data = get_dataframe_from_sql(graph.configs["database_configs"],graph.configs["query"],graph.configs["limit"])
-
-    def time_to_update(graph):
-        return time() - graph.last_updated >= graph.configs["update_interval"]
-
-    while True:
-        for index,graph in enumerate(st.session_state.graphs):
-            if not graph.state or not time_to_update(graph):
-                continue
-            graph.last_updated = time()
-            if graph.data is None:
-                update_data(index)      
-                plot_from_sql(graph.configs,graph.data)
-            else:
-                update_data(index)
+    display_graph_history()
