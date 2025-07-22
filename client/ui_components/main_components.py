@@ -1,5 +1,6 @@
 import streamlit as st
 import json
+from time import time
 
 # Function to display tool execution details
 def display_tool_executions():
@@ -11,6 +12,26 @@ def display_tool_executions():
                 st.markdown(f"**Output:** ```{exec_record['output'][:250]}...```")
                 st.markdown(f"**Time:** {exec_record['timestamp']}")
                 st.divider()
+
+def display_graph_history():
+    def update_data(index):
+        graph = st.session_state.graphs[index]
+        graph.data = get_dataframe_from_sql(graph.configs["database_configs"],graph.configs["query"],graph.configs["limit"])
+
+    def time_to_update(graph):
+        return time() - graph.last_updated >= graph.configs["update_interval"]
+
+    while True:
+        for index,graph in enumerate(st.session_state.graphs):
+            if not graph.state or not time_to_update(graph):
+                continue
+            graph.last_updated = time()
+            if graph.data is None:
+                update_data(index)
+                with st.expander("Graph History", expanded=False):      
+                    plot_from_sql(graph.configs,graph.data)
+            else:
+                update_data(index)
 
 def format_ai_output(content:list)->str:
     formated = ""
