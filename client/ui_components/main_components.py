@@ -79,6 +79,7 @@ class Graph():
     data:pd.DataFrame = None
     configs: dict
     state: bool = True
+    last_updated: int = 0
 
     def __init__(self,configs, data=None):
         self.data = data or self.data

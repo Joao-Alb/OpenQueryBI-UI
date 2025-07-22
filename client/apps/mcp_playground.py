@@ -149,16 +149,22 @@ def main():
 
     # ------------------------------------------------------------------ Create/Update Graphs
     import threading
-    from time import sleep
+    from time import time
 
     def update_data(index):
         graph = st.session_state.graphs[index]
-        while graph.state:
-            graph.data = get_dataframe_from_sql(graph.configs["database_configs"],graph.configs["query"],graph.configs["limit"])
-            sleep(graph.configs["update_interval"])
+        graph.data = get_dataframe_from_sql(graph.configs["database_configs"],graph.configs["query"],graph.configs["limit"])
 
-    for index,graph in enumerate(st.session_state.graphs):
-        if graph.data is None:
-            graph.data = get_dataframe_from_sql(graph.configs["database_configs"],graph.configs["query"],graph.configs["limit"])        
-        plot_from_sql(graph.configs,graph.data)
-        update_data(index)
+    def time_to_update(graph):
+        return time() - graph.last_updated >= graph.configs["update_interval"]
+
+    while True:
+        for index,graph in enumerate(st.session_state.graphs):
+            if not graph.state or not time_to_update(graph):
+                continue
+            graph.last_updated = time()
+            if graph.data is None:
+                update_data(index)      
+                plot_from_sql(graph.configs,graph.data)
+            else:
+                update_data(index)
