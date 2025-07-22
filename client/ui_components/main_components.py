@@ -17,6 +17,7 @@ def display_graph_history():
     def update_data(index):
         graph = st.session_state.graphs[index]
         graph.data = get_dataframe_from_sql(graph.configs["database_configs"],graph.configs["query"],graph.configs["limit"])
+        graph.last_updated = time()
 
     def time_to_update(graph):
         return time() - graph.last_updated >= graph.configs["update_interval"]
@@ -26,7 +27,6 @@ def display_graph_history():
             for index, graph in enumerate(st.session_state.graphs):
                 update_data(index)
                 plot_from_sql(graph.configs, graph.data)
-                graph.last_updated = time()
     
     display_all_graphs()
 
@@ -34,7 +34,6 @@ def display_graph_history():
         for index,graph in enumerate(st.session_state.graphs):
             if not graph.state or not time_to_update(graph):
                 continue
-            graph.last_updated = time()
             update_data(index)
 
 def format_ai_output(content:list)->str:
