@@ -26,7 +26,6 @@ def display_graph_history():
             for index, graph in enumerate(st.session_state.graphs):
                 update_data(index)
                 plot_from_sql(graph.configs, graph.data)
-                st.divider()
                 graph.last_updated = time()
     
     display_all_graphs()
@@ -97,9 +96,9 @@ functions ={
 def plot_from_sql(configs:dict,data):
     """Plot a bar chart from a SQL query using Streamlit. This will create a bar chart with the x and y values.
     """
-    if configs['x'] not in data.columns or configs['y'] not in data.columns:
-        raise ValueError(f"Columns {configs['x']} and {configs['y']} must be present in the dataframe.")
-    return st.markdown(f"## {configs['title']}"),functions[configs['type']](data, configs['x'], configs['y'])
+    st.markdown(f"## {configs['title']}")
+    functions[configs['type']](data, configs['x'], configs['y'])
+    st.divider()
 
 class Graph():
     data:pd.DataFrame = None
