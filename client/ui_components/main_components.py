@@ -94,7 +94,7 @@ def plot_from_sql(configs:dict,data):
     """
     if configs['x'] not in data.columns or configs['y'] not in data.columns:
         raise ValueError(f"Columns {configs['x']} and {configs['y']} must be present in the dataframe.")
-    return functions[configs['type']](data, configs['x'], configs['y'])
+    return st.markdown(f"## {configs['title']}"),functions[configs['type']](data, configs['x'], configs['y'])
 
 class Graph():
     data:pd.DataFrame = None
