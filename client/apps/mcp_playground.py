@@ -118,6 +118,8 @@ def main():
                                     if "plot_from_sql" in msg.name:
                                         graph = Graph(json.loads(msg.content))
                                         st.session_state.graphs.append(graph)
+                                        st.divider()
+                                        graph.plot_from_sql()
                             else:  # AIMessage
                                 if hasattr(msg, "content") and msg.content:
                                     with messages_container.chat_message("assistant"):
