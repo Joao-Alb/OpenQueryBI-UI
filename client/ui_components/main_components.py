@@ -63,7 +63,7 @@ def __query(query: str, database_info:dict):
     with engine.connect() as conn:
         result = conn.execute(text(query))
         return result.fetchall(),list(result.keys())
-
+    
 def get_dataframe_from_sql(database_info:dict,query:str,limit:int=100):
     """Get a dataframe from a SQL query. This will return a dataframe with the result of the query.
     """
@@ -107,3 +107,56 @@ class Graph():
     def __init__(self,configs, data=None):
         self.data = data or self.data
         self.configs = configs
+        self.functions ={
+        "line":self.plot_line_from_sql,
+        "bar":self.plot_bar_from_sql
+        }
+
+    def check_if_columns_in_data(self):
+        if self.configs['x'] not in self.data.columns or self.configs['y']  not in self.data.columns:
+            raise ValueError(f"Columns {'x'} and {'y'} must be present in the dataframe.")
+
+    def plot_line_from_sql(self):
+        """Plot a line chart from a SQL query. This will create a line chart with the x and y values.
+        """
+        self.check_if_columns_in_data()
+        return st.line_chart(self.data.set_index(self.configs['x'])[self.configs['y']])
+        
+    def plot_bar_from_sql(self):
+        """Plot a bar chart from a SQL query using Streamlit. This will create a bar chart with the x and y values.
+        """
+        self.check_if_columns_in_data()
+        return st.bar_chart(self.data.set_index(self.configs['x'])[self.configs['y']])
+
+    def plot_from_sql(self):
+        """Plot a bar chart from a SQL query using Streamlit. This will create a bar chart with the x and y values.
+        """
+        if not self.data:
+            self.data = self.get_dataframe_from_sql()
+        st.markdown(f"## {self.configs['title']}")
+        self.functions[self.configs['type']]()
+        st.divider()
+
+    def get_dataframe_from_sql(self):
+        """Get a dataframe from a SQL query. This will return a dataframe with the result of the query.
+        """
+        if "limit" not in self.configs['query'].lower():
+            self.configs['query'] = f"{self.configs['query']} LIMIT {self.configs['limit']}"
+        result,columns = self.__query(self.configs['query'],self.configs['database_configs'])
+        return pd.DataFrame(result, columns=columns)
+    
+    def __query(self,query: str, database_info:dict):
+        if database_info['dialect'] == "sqlite":
+            connection_url = f"sqlite:///{database_info['database']}"
+        
+        else:
+            connection_url = (
+                f"{database_info['dialect']}://{database_info['username']}:{database_info['password']}"
+                f"@{database_info['host']}:{database_info['port']}/{database_info['database']}"
+            )
+
+        engine = create_engine(connection_url)
+
+        with engine.connect() as conn:
+            result = conn.execute(text(query))
+            return result.fetchall(),list(result.keys())
