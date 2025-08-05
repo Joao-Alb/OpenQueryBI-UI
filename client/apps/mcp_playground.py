@@ -113,7 +113,8 @@ def main():
                                 tool_count += 1
                                 with messages_container.chat_message("assistant"):
                                     tool_message = f"**ToolMessage - {tool_count} ({msg.name}):** \n" + msg.content
-                                    st.code(tool_message, language='yaml')
+                                    with st.expander(msg.name,icon='🧰', expanded=False):
+                                        st.code(tool_message, language='yaml')
                                     _append_message_to_session({'role': 'assistant', 'tool': tool_message, })
                                     if "plot_from_sql" in msg.name:
                                         graph = Graph(json.loads(msg.content))
