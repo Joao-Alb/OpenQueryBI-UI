@@ -12,7 +12,7 @@ serverPort = 8501
 gatherUsageStats = false
 
 [theme]
-base="auto"
+base="dark"
 font="sans serif"
 
 
