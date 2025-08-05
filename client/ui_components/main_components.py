@@ -26,7 +26,7 @@ def display_graph_history():
         with st.expander(f"Graph history", expanded=False):
             for index, graph in enumerate(st.session_state.graphs):
                 update_data(index)
-                plot_from_sql(graph.configs, graph.data)
+                graph.plot_from_sql()
     
     display_all_graphs()
 
@@ -72,31 +72,6 @@ def get_dataframe_from_sql(database_info:dict,query:str,limit:int=100):
     result,columns = __query(query,database_info)
     return pd.DataFrame(result, columns=columns)
 
-def plot_line_from_sql(data,x:str,y:str):
-    """Plot a line chart from a SQL query. This will create a line chart with the x and y values.
-    """
-    if x not in data.columns or y not in data.columns:
-        raise ValueError(f"Columns {x} and {y} must be present in the dataframe.")
-    return st.line_chart(data.set_index(x)[y])
-
-def plot_bar_from_sql(data,x:str,y:str):
-    """Plot a bar chart from a SQL query using Streamlit. This will create a bar chart with the x and y values.
-    """
-    if x not in data.columns or y not in data.columns:
-        raise ValueError(f"Columns {x} and {y} must be present in the dataframe.")
-    return st.bar_chart(data.set_index(x)[y])
-
-functions ={
-    "line":plot_line_from_sql,
-    "bar":plot_bar_from_sql
-}
-
-def plot_from_sql(configs:dict,data):
-    """Plot a bar chart from a SQL query using Streamlit. This will create a bar chart with the x and y values.
-    """
-    st.markdown(f"## {configs['title']}")
-    functions[configs['type']](data, configs['x'], configs['y'])
-    st.divider()
 
 class Graph():
     data:pd.DataFrame = None
@@ -131,7 +106,7 @@ class Graph():
     def plot_from_sql(self):
         """Plot a bar chart from a SQL query using Streamlit. This will create a bar chart with the x and y values.
         """
-        if not self.data:
+        if self.data is None or self.data.empty:
             self.data = self.get_dataframe_from_sql()
         st.markdown(f"## {self.configs['title']}")
         self.functions[self.configs['type']]()
