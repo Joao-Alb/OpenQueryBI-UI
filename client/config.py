@@ -15,7 +15,7 @@ MODEL_OPTIONS = {
 
 # Streamlit defaults
 DEFAULT_MAX_TOKENS = 4096
-DEFAULT_TEMPERATURE = 1.0
+DEFAULT_TEMPERATURE = 0.2
 
 # Load server configuration
 config_path = os.path.join('.', 'servers_config.json')
