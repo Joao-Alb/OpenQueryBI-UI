@@ -13,7 +13,7 @@ nest_asyncio.apply()
 page_icon_path = os.path.join('.', 'icons', 'playground.png')
 
 st.set_page_config(
-                   page_title="MCP Playground",
+                   page_title="OpenQueryBI",
                    page_icon=(page_icon_path),
                    layout='wide',
                    initial_sidebar_state="expanded"
