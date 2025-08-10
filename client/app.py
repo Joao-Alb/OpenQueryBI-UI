@@ -10,7 +10,7 @@ from apps import mcp_playground
 # Apply nest_asyncio to allow nested asyncio event loops (needed for Streamlit's execution model)
 nest_asyncio.apply()
 
-page_icon_path = os.path.join('.', 'icons', 'playground.png')
+page_icon_path = os.path.join('.', 'icons', 'OpenQueryBI_icon.png')
 
 st.set_page_config(
                    page_title="OpenQueryBI",
