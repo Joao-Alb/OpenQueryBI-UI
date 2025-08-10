@@ -1,5 +1,5 @@
 import streamlit as st
-from config import MODEL_OPTIONS
+from config import MODEL_OPTIONS, DEFAULT_TEMPERATURE
 import traceback
 from services.mcp_service import connect_to_mcp_servers
 from services.chat_service import create_chat, delete_chat
@@ -93,7 +93,7 @@ def create_advanced_configuration_widget():
                                     max_value=10240,
                                     value=4096,
                                     step=512,)
-        params['temperature'] = st.slider("Temperature", 0.0, 1.0, step=0.05, value=1.0)
+        params['temperature'] = st.slider("Temperature", 0.0, 1.0, step=0.05, value=DEFAULT_TEMPERATURE)
                 
 def create_mcp_connection_widget():
     with st.sidebar:
