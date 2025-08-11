@@ -19,7 +19,7 @@ def create_llm_model(llm_provider: str, **kwargs):
         return ChatOpenAI(
             openai_api_key=params.get("api_key"),
             model=MODEL_OPTIONS['OpenAI'],
-            temperature=kwargs.get('temperature', 0.7),
+            temperature=kwargs.get('temperature', 0.7) if not MODEL_OPTIONS['OpenAI'].startswith('gpt-5') else 1,
         )
     elif llm_provider == "Anthropic":
         return ChatAnthropic(
