@@ -98,36 +98,18 @@ def create_advanced_configuration_widget():
 def create_mcp_connection_widget():
     with st.sidebar:
         st.subheader("Server Management")
-        with st.expander(f"MCP Servers ({len(st.session_state.servers)})"):
-            for name, config in st.session_state.servers.items():
-                with st.container(border=True):
-                    st.markdown(f"**Server:** {name}")
-                    st.markdown(f"**URL:** {config['url']}")
-                    if st.button(f"Remove {name}", key=f"remove_{name}"):
-                        del st.session_state.servers[name]
-                        st.rerun()
 
         if st.session_state.get("agent"):
             st.success(f"📶 Connected to {len(st.session_state.servers)} MCP servers!"
                        f" Found {len(st.session_state.tools)} tools.")
-            if st.button("Disconnect to MCP Servers"):
-                with st.spinner("Connecting to MCP servers..."):
-                    try:
-                        reset_connection_state()
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Error disconnecting to MCP servers: {str(e)}")
-                        st.code(traceback.format_exc(), language="python")
         else:
-            st.warning("⚠️ Not connected to MCP server")
-            if st.button("Connect to MCP Servers"):
-                with st.spinner("Connecting to MCP servers..."):
-                    try:
-                        connect_to_mcp_servers()
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Error connecting to MCP servers: {str(e)}")
-                        st.code(traceback.format_exc(), language="python")
+            with st.spinner("Connecting to MCP servers..."):
+                try:
+                    connect_to_mcp_servers()
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error connecting to MCP servers: {str(e)}")
+                    st.code(traceback.format_exc(), language="python")
 
 def create_mcp_tools_widget():
     with st.sidebar:
