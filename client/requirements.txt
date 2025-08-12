@@ -17,3 +17,4 @@ langchain-google-genai>=2.1.2
 langchain-mcp-adapters==0.0.7
 langgraph==0.3.30
 SQLAlchemy==2.0.41
+psycopg2-binary==2.9.10
