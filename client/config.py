@@ -7,8 +7,8 @@ env = os.getenv
 
 # Model mapping
 MODEL_OPTIONS = {
-    'OpenAI': 'gpt-5',
     'Anthropic': 'claude-3-5-sonnet-20240620',
+    'OpenAI': 'gpt-5',
     'Google': 'gemini-2.0-flash-001',
     'Bedrock': 'us.anthropic.claude-3-7-sonnet-20250219-v1:0'
     }
