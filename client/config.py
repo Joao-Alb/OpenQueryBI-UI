@@ -1,6 +1,7 @@
 import os
 import json
 from dotenv import load_dotenv
+from utils.secrets import has_env_key
 
 load_dotenv()
 env = os.getenv
@@ -12,6 +13,9 @@ MODEL_OPTIONS = {
     'Google': 'gemini-2.0-flash-001',
     'Bedrock': 'us.anthropic.claude-3-7-sonnet-20250219-v1:0'
     }
+
+#list only the providers that are available in the config file
+AVAILABLE_PROVIDERS = [provider for provider in MODEL_OPTIONS.keys() if (has_env_key(provider) or provider == "Bedrock")]
 
 # Streamlit defaults
 DEFAULT_MAX_TOKENS = 4096
