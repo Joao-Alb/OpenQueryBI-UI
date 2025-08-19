@@ -7,6 +7,16 @@ from langchain_core.tools import BaseTool
 from services.ai_service import create_llm_model
 from utils.async_helpers import run_async
 
+def init_session_state():
+    if "history_chats" not in st.session_state:
+        st.session_state["history_chats"] = []
+
+    if "current_chat_index" not in st.session_state:
+        st.session_state["current_chat_index"] = 0
+
+    if "current_chat_id" not in st.session_state:
+        st.session_state["current_chat_id"] = None
+
 
 async def setup_mcp_client(server_config: Dict[str, Dict]) -> MultiServerMCPClient:
     """Initialize a MultiServerMCPClient with the provided server configuration."""

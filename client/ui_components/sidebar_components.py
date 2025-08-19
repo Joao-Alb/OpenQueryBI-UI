@@ -110,32 +110,3 @@ def create_mcp_connection_widget():
                 except Exception as e:
                     st.error(f"Error connecting to MCP servers: {str(e)}")
                     st.code(traceback.format_exc(), language="python")
-
-def create_mcp_tools_widget():
-    with st.sidebar:
-        if st.session_state.tools:
-            st.subheader("🧰 Available Tools")
-
-            selected_tool_name = st.selectbox(
-                "Select a Tool",
-                options=[tool.name for tool in st.session_state.tools],
-                index=0
-            )
-
-            if selected_tool_name:
-                selected_tool = next(
-                    (tool for tool in st.session_state.tools if tool.name == selected_tool_name),
-                    None
-                )
-
-                if selected_tool:
-                    with st.container():
-                        st.write("**Description:**")
-                        st.write(selected_tool.description)
-
-                        parameters = extract_tool_parameters(selected_tool)
-
-                        if parameters:
-                            st.write("**Parameters:**")
-                            for param in parameters:
-                                st.code(param)

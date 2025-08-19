@@ -3,7 +3,7 @@ import datetime
 import streamlit as st
 from langchain_core.messages import HumanMessage, ToolMessage
 from services.ai_service import get_response_stream
-from services.mcp_service import run_agent
+from services.mcp_service import run_agent, init_session_state
 from services.chat_service import get_current_chat, _append_message_to_session
 from utils.async_helpers import run_async
 from utils.ai_prompts import make_system_prompt, make_main_prompt
@@ -14,10 +14,9 @@ import traceback
 import pandas as pd
 
 def main():
-    with st.sidebar:
-        st.subheader("Chat History")
-    sd_compents.create_history_chat_container()
 
+    # Initialize session state
+    init_session_state()
 # ------------------------------------------------------------------ Chat Part
     # Main chat interface
     st.header("Chat with Agent")
@@ -38,11 +37,11 @@ def main():
 
 # ------------------------------------------------------------------ SideBar widgets
     # Main sidebar widgets
-    sd_compents.create_sidebar_chat_buttons()
+    #sd_compents.create_sidebar_chat_buttons()
     sd_compents.create_provider_select_widget()
     sd_compents.create_advanced_configuration_widget()
     sd_compents.create_mcp_connection_widget()
-    sd_compents.create_mcp_tools_widget()
+    #sd_compents.create_mcp_tools_widget()
 
 # ------------------------------------------------------------------ Graphs data variable
     if "graphs" not in st.session_state:
