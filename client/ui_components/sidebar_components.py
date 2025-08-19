@@ -1,5 +1,5 @@
 import streamlit as st
-from config import MODEL_OPTIONS, DEFAULT_TEMPERATURE
+from config import MODEL_OPTIONS, DEFAULT_TEMPERATURE, AVAILABLE_PROVIDERS
 import traceback
 from services.mcp_service import connect_to_mcp_servers
 from services.chat_service import create_chat, delete_chat
@@ -57,12 +57,12 @@ def create_model_select_widget():
 def create_provider_select_widget():
     params = st.session_state.setdefault('params', {})
     # Load previously selected provider or default to the first
-    default_provider = params.get("model_id", list(MODEL_OPTIONS.keys())[0])
-    default_index = list(MODEL_OPTIONS.keys()).index(default_provider)
+    default_provider = params.get("model_id", AVAILABLE_PROVIDERS[0])
+    default_index = AVAILABLE_PROVIDERS.index(default_provider)
     # Provider selector with synced state
     selected_provider = st.sidebar.selectbox(
         '🔎 Choose Provider',
-        options=list(MODEL_OPTIONS.keys()),
+        options=AVAILABLE_PROVIDERS,
         index=default_index,
         key="provider_selection",
         on_change=reset_connection_state
