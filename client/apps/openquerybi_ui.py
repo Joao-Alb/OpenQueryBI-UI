@@ -11,7 +11,6 @@ import ui_components.sidebar_components as sd_compents
 from  ui_components.main_components import display_tool_executions,format_ai_output, Graph, display_graph_history
 from config import DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE
 import traceback
-import pandas as pd
 
 def main():
 
