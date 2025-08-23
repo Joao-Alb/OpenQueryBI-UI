@@ -1,11 +1,6 @@
 import os
-from ai import get_sql_from_ai
-import config
-#submodule_path = Path(__file__).parent / "OpenQueryBI-UI" / "client"
-#sys.path.append(str(submodule_path))
-
-import streamlit as st
-st.sidebar.title("OpenQueryBI Benchmark")
+from benchmark.ai import get_sql_from_ai
+from benchmark import db_config as config
 
 def start_workspace():
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -29,17 +24,18 @@ def clean_workspace():
     if os.path.exists("spider/spider.bat"):
         os.remove("spider/spider.bat")
 
-testcases = config.load_file("data/spider/spider_data/test.json")
-start_workspace()
-for tc in testcases:
-    # TODO set databases.json env
-    predicted_sql = get_sql_from_ai(tc['question'])
-    if not predicted_sql.endswith(";"):
-        predicted_sql += ";"
-    append_sql(predicted_sql)
+def main():
+    testcases = config.load_file("data/spider/spider_data/test.json")
+    start_workspace()
+    for tc in testcases:
+        # TODO set databases.json env
+        predicted_sql = get_sql_from_ai(tc['question'])
+        if not predicted_sql.endswith(";"):
+            predicted_sql += ";"
+        append_sql(predicted_sql)
 
-evaluate()
-clean_workspace()
+    evaluate()
+    clean_workspace()
 
 
 

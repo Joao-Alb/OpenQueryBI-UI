@@ -6,6 +6,7 @@ from langgraph.prebuilt import create_react_agent
 from langchain_core.tools import BaseTool
 from services.ai_service import create_llm_model
 from utils.async_helpers import run_async
+from utils.secrets import has_env_key, get_key
 
 def init_session_state():
     if "history_chats" not in st.session_state:
@@ -17,6 +18,10 @@ def init_session_state():
     if "current_chat_id" not in st.session_state:
         st.session_state["current_chat_id"] = None
 
+    if "benchmark" not in st.session_state:
+        st.session_state["benchmark"] = {
+            "status": True if has_env_key("BENCHMARK") and "True" in get_key("BENCHMARK") else False,
+        }
 
 async def setup_mcp_client(server_config: Dict[str, Dict]) -> MultiServerMCPClient:
     """Initialize a MultiServerMCPClient with the provided server configuration."""
