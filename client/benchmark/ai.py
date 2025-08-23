@@ -1,4 +1,4 @@
-from OpenQueryBI.client.services.ai_service import get_response
+from services.ai_service import get_response
 
 def get_sql_from_ai(prompt:str)->str:
     ans = get_response(prompt, llm_provider='Anthropic')
