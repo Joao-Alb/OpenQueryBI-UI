@@ -37,6 +37,7 @@ def main():
 # ------------------------------------------------------------------ SideBar widgets
     # Main sidebar widgets
     #sd_compents.create_sidebar_chat_buttons()
+    sd_compents.create_benchmark_button()
     sd_compents.create_provider_select_widget()
     sd_compents.create_advanced_configuration_widget()
     sd_compents.create_mcp_connection_widget()
@@ -145,8 +146,10 @@ def main():
                 st.stop()
         # Add assistant message to chat history
         _append_message_to_session(response_dct)
-            
-    display_tool_executions()
 
-    # ------------------------------------------------------------------ Create/Update Graphs
-    display_graph_history()
+    if not st.session_state.benchmark["status"]:
+      
+        display_tool_executions()
+
+        # ------------------------------------------------------------------ Create/Update Graphs
+        display_graph_history()
