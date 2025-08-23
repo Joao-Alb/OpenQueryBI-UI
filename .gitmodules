@@ -1,3 +1,6 @@
 [submodule "servers/OpenQueryBI"]
 	path = servers/OpenQueryBI
 	url = https://github.com/Joao-Alb/OpenQueryBI.git
+[submodule "client/benchmark/spider"]
+	path = client/benchmark/spider
+	url = https://github.com/taoyds/spider
