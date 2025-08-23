@@ -1,8 +1,14 @@
 import streamlit as st
 import asyncio
 import os
+import sys
 import nest_asyncio
 import atexit
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+
 from services.chat_service import init_session
 from utils.async_helpers import on_shutdown
 from apps import openquerybi_ui
