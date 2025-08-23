@@ -8,7 +8,10 @@ services:
     volumes:
       - ./servers/OpenQueryBI:/app
     ports:
+      - "8001:8001"
       - "8002:8002"
+    command: >
+      bash -c "uvicorn api:app --host 0.0.0.0 --port 8001 & python main.py --port 8002 & wait"
 
   hostclient:
     build: ./client
