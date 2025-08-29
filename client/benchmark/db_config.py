@@ -13,11 +13,6 @@ def load_file(databases_path):
 def save_mcp_databases(databases:list):
     body = databases
     r = requests.post("http://openquerybi:8001/set_databases_configs/", json=body)
-    #export result of requests to a file for debugging
-    with open("benchmark/db_config_log.txt", "w") as f:
-        f.write(f"Request body 4: {json.dumps(body, indent=2)}\n")
-        f.write(f"Response status code: {r.status_code}\n")
-        f.write(f"Response body: {r.text}\n")
 
 def set_databases(databases_ids:list[str]):
     spider = load_file(spider_databases_path)
@@ -33,7 +28,7 @@ def set_databases(databases_ids:list[str]):
                         "password":"",
                         "host":"",
                         "port":"",
-                        "database":os.path.abspath(f"test/test_database/{id}/{id}.sqlite")
+                        "database":f"test/test_database/{id}/{id}.sqlite"
                     },
                     "tables":db['table_names'],
                     "type": "sqlite"
