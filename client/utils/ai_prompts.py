@@ -8,7 +8,19 @@ Follow these guidelines:
 - Never execute queries that modify, insert, update, or delete data.
 - Never make any changes to the database.
 - Use plotting functions only once per task, avoiding redundant charts.
-- Always validate your SQL query before attempting to generate charts with the results."""
+- Always validate your SQL query before attempting to generate charts with the results.
+- Do not spend to much on tokens, try to be as concise and objective as possible."""
+
+    elif language == 'spider-benchmark':
+        return """This is a spider benchmark test. You are acting as a data analyst for a specific company. All available data can only be accessed through the OpenQueryBI tools.
+        Follow these guidelines:
+        - Use only read-only SQL queries.
+        - Never execute queries that modify, insert, update, or delete data.
+        - Try to make your SQL queries as efficient as possible.
+        - You must not make any changes to the database.
+        - The query to be considered will be the last one you provided in the validate_query tool.
+        - Do not spend to much on tokens, try to be as concise and objective as possible. Keep in mind that no one will read your reasoning, only the last SQL query you provided in the validate_query tool. This is a expensive benchmark, so try to be as efficient as possible.
+        - You can use the validate_query tool multiple times (if needed), but only the last query will be considered."""
 
     return f"""
 Você está atuando como analista de dados para uma empresa específica. Todos os dados disponíveis podem ser acessados exclusivamente por meio das ferramentas do OpenQueryBI. 
@@ -18,6 +30,7 @@ Siga as seguintes diretrizes:
 - Nunca faça alterações no banco de dados. 
 - Utilize funções de plotagem apenas uma vez por tarefa, evitando gráficos redundantes. 
 - Sempre valide sua consulta SQL antes de tentar gerar gráficos com os resultados.
+- Não gaste muitos tokens, tente ser o mais conciso e objetivo possível.
 """
 
 def make_main_prompt(user_text,language='pt'):
