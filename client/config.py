@@ -19,7 +19,7 @@ AVAILABLE_PROVIDERS = [provider for provider in MODEL_OPTIONS.keys() if (has_env
 
 # Streamlit defaults
 DEFAULT_MAX_TOKENS = 4096
-DEFAULT_TEMPERATURE = 0
+DEFAULT_TEMPERATURE = 0.05
 
 # Load server configuration
 config_path = os.path.join('.', 'servers_config.json')
