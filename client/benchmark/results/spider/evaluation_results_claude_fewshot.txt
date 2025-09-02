@@ -1,0 +1,248 @@
+medium pred: SELECT Name, Manager, Captain FROM club;
+medium gold: SELECT Manager ,  Captain FROM club
+
+medium pred: SELECT Name, Manager, Captain FROM club;
+medium gold: SELECT Manager ,  Captain FROM club
+
+eval_err_num:1
+medium pred: SELECT p.Name AS player_name, c.Name AS club_name FROM player p JOIN club c ON p.Club_ID = c.Club_ID;
+medium gold: SELECT T2.Name ,  T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID
+
+eval_err_num:2
+medium pred: SELECT p.Name AS player_name, c.Name AS club_name FROM player p JOIN club c ON p.Club_ID = c.Club_ID;
+medium gold: SELECT T2.Name ,  T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID
+
+eval_err_num:3
+medium pred: SELECT DISTINCT c.Name FROM club c JOIN player p ON c.Club_ID = p.Club_ID WHERE p.Wins_count > 2;
+medium gold: SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID WHERE T2.Wins_count  >  2
+
+eval_err_num:4
+medium pred: SELECT DISTINCT c.Name FROM club c JOIN player p ON c.Club_ID = p.Club_ID WHERE p.Wins_count > 2;
+medium gold: SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID WHERE T2.Wins_count  >  2
+
+eval_err_num:5
+medium pred: SELECT p.Name FROM player p JOIN club c ON p.Club_ID = c.Club_ID WHERE c.Manager = "Sam Allardyce";
+medium gold: SELECT T2.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID WHERE T1.Manager  =  "Sam Allardyce"
+
+eval_err_num:6
+medium pred: SELECT p.Name FROM player p JOIN club c ON p.Club_ID = c.Club_ID WHERE c.Manager = 'Sam Allardyce';
+medium gold: SELECT T2.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID WHERE T1.Manager  =  "Sam Allardyce"
+
+eval_err_num:7
+hard pred: SELECT c.Name, AVG(p.Earnings) as avg_earnings FROM club c JOIN player p ON c.Club_ID = p.Club_ID GROUP BY c.Club_ID, c.Name ORDER BY avg_earnings DESC;
+hard gold: SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID GROUP BY T1.Club_ID ORDER BY avg(T2.Earnings) DESC
+
+eval_err_num:8
+hard pred: SELECT c.Name FROM club c JOIN player p ON c.Club_ID = p.Club_ID GROUP BY c.Club_ID, c.Name ORDER BY AVG(p.Earnings) DESC;
+hard gold: SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID GROUP BY T1.Club_ID ORDER BY avg(T2.Earnings) DESC
+
+eval_err_num:9
+medium pred: SELECT Manufacturer, COUNT(*) as club_count FROM club GROUP BY Manufacturer ORDER BY club_count DESC;
+medium gold: SELECT Manufacturer ,  COUNT(*) FROM club GROUP BY Manufacturer
+
+eval_err_num:10
+medium pred: SELECT Manufacturer, COUNT(*) as club_count FROM club GROUP BY Manufacturer ORDER BY club_count DESC;
+medium gold: SELECT Manufacturer ,  COUNT(*) FROM club GROUP BY Manufacturer
+
+eval_err_num:11
+hard pred: SELECT c.Name FROM club c LEFT JOIN player p ON c.Club_ID = p.Club_ID WHERE p.Club_ID IS NULL;
+hard gold: SELECT Name FROM club WHERE Club_ID NOT IN (SELECT Club_ID FROM player)
+
+eval_err_num:12
+hard pred: SELECT c.Name FROM club c LEFT JOIN player p ON c.Club_ID = p.Club_ID WHERE p.Club_ID IS NULL;
+hard gold: SELECT Name FROM club WHERE Club_ID NOT IN (SELECT Club_ID FROM player)
+
+hard pred: SELECT Country FROM player WHERE Earnings > 1400000 UNION SELECT Country FROM player WHERE Earnings < 1100000;
+hard gold: SELECT Country FROM player WHERE Earnings  >  1400000 INTERSECT SELECT Country FROM player WHERE Earnings  <  1100000
+
+medium pred: SELECT Name, Country, Earnings FROM player WHERE Country = "Australia" OR Country = "Zimbabwe";
+medium gold: SELECT Earnings FROM player WHERE Country  =  "Australia" OR Country  =  "Zimbabwe"
+
+medium pred: SELECT Name, Country, Earnings FROM player WHERE Country = 'Australia' OR Country = 'Zimbabwe';
+medium gold: SELECT Earnings FROM player WHERE Country  =  "Australia" OR Country  =  "Zimbabwe"
+
+eval_err_num:13
+extra pred: SELECT DISTINCT c.customer_id, c.customer_first_name, c.customer_last_name FROM Customers c WHERE c.customer_id IN ( SELECT customer_id FROM Orders GROUP BY customer_id HAVING COUNT(*) > 2 ) AND c.customer_id IN ( SELECT o.customer_id FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.customer_id HAVING COUNT(oi.order_item_id) >= 3 );
+extra gold: SELECT T1.customer_id ,  T1.customer_first_name ,  T1.customer_last_name FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id GROUP BY T1.customer_id HAVING count(*)  >  2 INTERSECT SELECT T1.customer_id ,  T1.customer_first_name ,  T1.customer_last_name FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id JOIN Order_items AS T3 ON T2.order_id  =  T3.order_id GROUP BY T1.customer_id HAVING count(*)  >= 3
+
+eval_err_num:14
+extra pred: SELECT c.customer_id, c.customer_first_name, c.customer_last_name FROM Customers c WHERE c.customer_id IN ( SELECT o.customer_id FROM Orders o GROUP BY o.customer_id HAVING COUNT(o.order_id) > 2 ) AND c.customer_id IN ( SELECT o.customer_id FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.customer_id HAVING COUNT(oi.order_item_id) >= 3 );
+extra gold: SELECT T1.customer_id ,  T1.customer_first_name ,  T1.customer_last_name FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id GROUP BY T1.customer_id HAVING count(*)  >  2 INTERSECT SELECT T1.customer_id ,  T1.customer_first_name ,  T1.customer_last_name FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id JOIN Order_items AS T3 ON T2.order_id  =  T3.order_id GROUP BY T1.customer_id HAVING count(*)  >= 3
+
+eval_err_num:15
+medium pred: SELECT o.order_id, o.order_status_code, COUNT(oi.product_id) as number_of_products FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.order_id, o.order_status_code ORDER BY o.order_id;
+medium gold: SELECT T1.order_id ,  T1.order_status_code ,  count(*) FROM Orders AS T1 JOIN Order_items AS T2 ON T1.order_id  =  T2.order_id GROUP BY T1.order_id
+
+eval_err_num:16
+medium pred: SELECT o.order_id, o.order_status_code, COUNT(oi.product_id) as product_count FROM Orders o LEFT JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.order_id, o.order_status_code ORDER BY o.order_id;
+medium gold: SELECT T1.order_id ,  T1.order_status_code ,  count(*) FROM Orders AS T1 JOIN Order_items AS T2 ON T1.order_id  =  T2.order_id GROUP BY T1.order_id
+
+eval_err_num:17
+hard pred: SELECT DISTINCT o.date_order_placed FROM Orders o WHERE o.date_order_placed = (SELECT MIN(date_order_placed) FROM Orders) UNION SELECT DISTINCT o.date_order_placed FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.order_id, o.date_order_placed HAVING COUNT(oi.order_item_id) > 1;
+hard gold: SELECT min(date_order_placed) FROM Orders UNION SELECT T1.date_order_placed FROM Orders AS T1 JOIN Order_items AS T2 ON T1.order_id  =  T2.order_id GROUP BY T1.order_id HAVING count(*)  >  1
+
+eval_err_num:18
+hard pred: SELECT 'Earliest Order' as type, MIN(date_order_placed) as order_date FROM Orders UNION ALL SELECT 'Orders with >1 item' as type, o.date_order_placed as order_date FROM Orders o JOIN ( SELECT order_id FROM Order_Items GROUP BY order_id HAVING COUNT(*) > 1 ) multi_item_orders ON o.order_id = multi_item_orders.order_id ORDER BY order_date;
+hard gold: SELECT min(date_order_placed) FROM Orders UNION SELECT T1.date_order_placed FROM Orders AS T1 JOIN Order_items AS T2 ON T1.order_id  =  T2.order_id GROUP BY T1.order_id HAVING count(*)  >  1
+
+eval_err_num:19
+extra pred: SELECT c.customer_first_name, c.customer_middle_initial, c.customer_last_name FROM Customers c LEFT JOIN Orders o ON c.customer_id = o.customer_id WHERE o.customer_id IS NULL;
+extra gold: SELECT customer_first_name ,  customer_middle_initial ,  customer_last_name FROM Customers EXCEPT SELECT T1.customer_first_name ,  T1.customer_middle_initial ,  T1.customer_last_name FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id
+
+eval_err_num:20
+extra pred: SELECT c.customer_first_name, c.customer_middle_initial, c.customer_last_name FROM Customers c LEFT JOIN Orders o ON c.customer_id = o.customer_id WHERE o.customer_id IS NULL;
+extra gold: SELECT customer_first_name ,  customer_middle_initial ,  customer_last_name FROM Customers EXCEPT SELECT T1.customer_first_name ,  T1.customer_middle_initial ,  T1.customer_last_name FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id
+
+eval_err_num:21
+extra pred: SELECT p.product_id, p.product_name, p.product_price, p.product_color FROM Products p LEFT JOIN Order_Items oi ON p.product_id = oi.product_id GROUP BY p.product_id, p.product_name, p.product_price, p.product_color HAVING COUNT(oi.product_id) < 2;
+extra gold: SELECT product_id ,  product_name ,  product_price ,  product_color FROM Products EXCEPT SELECT T1.product_id ,  T1.product_name ,  T1.product_price ,  T1.product_color FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Orders AS T3 ON T2.order_id  =  T3.order_id GROUP BY T1.product_id HAVING count(*)  >=  2
+
+eval_err_num:22
+hard pred: SELECT p.product_id, p.product_name, p.product_price, p.product_color FROM Products p LEFT JOIN Order_Items oi ON p.product_id = oi.product_id GROUP BY p.product_id, p.product_name, p.product_price, p.product_color HAVING COUNT(DISTINCT oi.order_id) < 2;
+hard gold: select t1.product_id ,  t1.product_name ,  t1.product_price ,  t1.product_color from products as t1 join order_items as t2 on t1.product_id  =  t2.product_id join orders as t3 on t2.order_id  =  t3.order_id group by t1.product_id having count(*) < 2
+
+eval_err_num:23
+medium pred: SELECT o.order_id, o.date_order_placed FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.order_id, o.date_order_placed HAVING COUNT(oi.product_id) >= 2;
+medium gold: SELECT T1.order_id ,  T1.date_order_placed FROM Orders AS T1 JOIN Order_items AS T2 ON T1.order_id  =  T2.order_id GROUP BY T1.order_id HAVING count(*)  >=  2
+
+eval_err_num:24
+medium pred: SELECT o.order_id, o.date_order_placed FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.order_id, o.date_order_placed HAVING COUNT(oi.order_item_id) >= 2;
+medium gold: SELECT T1.order_id ,  T1.date_order_placed FROM Orders AS T1 JOIN Order_items AS T2 ON T1.order_id  =  T2.order_id GROUP BY T1.order_id HAVING count(*)  >=  2
+
+eval_err_num:25
+extra pred: SELECT p.product_id, p.product_name, p.product_price FROM Products p JOIN Order_Items oi ON p.product_id = oi.product_id GROUP BY p.product_id, p.product_name, p.product_price ORDER BY COUNT(*) DESC LIMIT 1;
+extra gold: SELECT T1.product_id ,  T1.product_name ,  T1.product_price FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id GROUP BY T1.product_id ORDER BY count(*) DESC LIMIT 1
+
+eval_err_num:26
+extra pred: SELECT p.product_id, p.product_name, p.product_price FROM Products p JOIN Order_Items oi ON p.product_id = oi.product_id GROUP BY p.product_id, p.product_name, p.product_price HAVING COUNT(*) = ( SELECT MAX(order_count) FROM ( SELECT COUNT(*) as order_count FROM Order_Items GROUP BY product_id ) );
+extra gold: SELECT T1.product_id ,  T1.product_name ,  T1.product_price FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id GROUP BY T1.product_id ORDER BY count(*) DESC LIMIT 1
+
+eval_err_num:27
+extra pred: SELECT o.order_id, SUM(p.product_price) as total_price FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id JOIN Products p ON oi.product_id = p.product_id GROUP BY o.order_id ORDER BY total_price ASC LIMIT 1;
+extra gold: SELECT T1.order_id ,  sum(T2.product_price) FROM Order_items AS T1 JOIN Products AS T2 ON T1.product_id  =  T2.product_id GROUP BY T1.order_id ORDER BY sum(T2.product_price) ASC LIMIT 1
+
+eval_err_num:28
+extra pred: SELECT o.order_id, SUM(p.product_price) as total_cost FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id JOIN Products p ON oi.product_id = p.product_id GROUP BY o.order_id ORDER BY total_cost ASC LIMIT 1;
+extra gold: select t1.order_id ,  sum(t2.product_price) from order_items as t1 join products as t2 on t1.product_id  =  t2.product_id group by t1.order_id order by sum(t2.product_price) asc limit 1
+
+eval_err_num:29
+hard pred: SELECT c.gender_code, COUNT(oi.product_id) as number_of_products FROM Customers c JOIN Orders o ON c.customer_id = o.customer_id JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY c.gender_code;
+hard gold: SELECT T1.gender_code ,  count(*) FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id JOIN Order_items AS T3 ON T2.order_id  =  T3.order_id GROUP BY T1.gender_code
+
+eval_err_num:30
+hard pred: SELECT c.gender_code, COUNT(oi.product_id) as product_count FROM Customers c JOIN Orders o ON c.customer_id = o.customer_id JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY c.gender_code;
+hard gold: SELECT T1.gender_code ,  count(*) FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id JOIN Order_items AS T3 ON T2.order_id  =  T3.order_id GROUP BY T1.gender_code
+
+eval_err_num:31
+medium pred: SELECT c.gender_code, COUNT(o.order_id) as order_count FROM Customers c JOIN Orders o ON c.customer_id = o.customer_id GROUP BY c.gender_code;
+medium gold: SELECT T1.gender_code ,  count(*) FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id GROUP BY T1.gender_code
+
+eval_err_num:32
+medium pred: SELECT c.gender_code, COUNT(o.order_id) as order_count FROM Customers c JOIN Orders o ON c.customer_id = o.customer_id GROUP BY c.gender_code;
+medium gold: SELECT T1.gender_code ,  count(*) FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id GROUP BY T1.gender_code
+
+eval_err_num:33
+medium pred: SELECT c.customer_first_name, c.customer_middle_initial, c.customer_last_name, cpm.payment_method_code FROM Customers c JOIN Customer_Payment_Methods cpm ON c.customer_id = cpm.customer_id;
+medium gold: SELECT T1.customer_first_name ,  T1.customer_middle_initial ,  T1.customer_last_name ,  T2.Payment_method_code FROM Customers AS T1 JOIN Customer_Payment_Methods AS T2 ON T1.customer_id  =  T2.customer_id
+
+eval_err_num:34
+medium pred: SELECT c.customer_first_name, c.customer_middle_initial, c.customer_last_name, cpm.payment_method_code FROM Customers c JOIN Customer_Payment_Methods cpm ON c.customer_id = cpm.customer_id;
+medium gold: SELECT T1.customer_first_name ,  T1.customer_middle_initial ,  T1.customer_last_name ,  T2.Payment_method_code FROM Customers AS T1 JOIN Customer_Payment_Methods AS T2 ON T1.customer_id  =  T2.customer_id
+
+eval_err_num:35
+medium pred: SELECT I.invoice_status_code, I.invoice_date, S.shipment_date FROM Invoices I LEFT JOIN Shipments S ON I.invoice_number = S.invoice_number;
+medium gold: SELECT T1.invoice_status_code ,  T1.invoice_date ,  T2.shipment_date FROM Invoices AS T1 JOIN Shipments AS T2 ON T1.invoice_number  =  T2.invoice_number
+
+eval_err_num:36
+medium pred: SELECT i.invoice_status_code, i.invoice_date, s.shipment_date FROM Invoices i LEFT JOIN Shipments s ON i.invoice_number = s.invoice_number;
+medium gold: SELECT T1.invoice_status_code ,  T1.invoice_date ,  T2.shipment_date FROM Invoices AS T1 JOIN Shipments AS T2 ON T1.invoice_number  =  T2.invoice_number
+
+eval_err_num:37
+hard pred: SELECT p.product_name, s.shipment_date FROM Products p JOIN Order_Items oi ON p.product_id = oi.product_id JOIN Shipment_Items si ON oi.order_item_id = si.order_item_id JOIN Shipments s ON si.shipment_id = s.shipment_id;
+hard gold: SELECT T1.product_name ,  T4.shipment_date FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Shipment_Items AS T3 ON T2.order_item_id  =  T3.order_item_id JOIN Shipments AS T4 ON T3.shipment_id  =  T4.shipment_id
+
+eval_err_num:38
+hard pred: SELECT DISTINCT p.product_name, s.shipment_date FROM Products p JOIN Order_Items oi ON p.product_id = oi.product_id JOIN Shipment_Items si ON oi.order_item_id = si.order_item_id JOIN Shipments s ON si.shipment_id = s.shipment_id ORDER BY s.shipment_date;
+hard gold: SELECT T1.product_name ,  T4.shipment_date FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Shipment_Items AS T3 ON T2.order_item_id  =  T3.order_item_id JOIN Shipments AS T4 ON T3.shipment_id  =  T4.shipment_id
+
+eval_err_num:39
+medium pred: SELECT oi.order_item_status_code, s.shipment_tracking_number FROM Order_Items oi JOIN Shipment_Items si ON oi.order_item_id = si.order_item_id JOIN Shipments s ON si.shipment_id = s.shipment_id;
+medium gold: SELECT T1.order_item_status_code ,  T3.shipment_tracking_number FROM Order_items AS T1 JOIN Shipment_Items AS T2 ON T1.order_item_id  =  T2.order_item_id JOIN Shipments AS T3 ON T2.shipment_id  =  T3.shipment_id
+
+eval_err_num:40
+medium pred: SELECT DISTINCT oi.order_item_status_code, s.shipment_tracking_number FROM Order_Items oi JOIN Shipment_Items si ON oi.order_item_id = si.order_item_id JOIN Shipments s ON si.shipment_id = s.shipment_id;
+medium gold: SELECT T1.order_item_status_code ,  T3.shipment_tracking_number FROM Order_items AS T1 JOIN Shipment_Items AS T2 ON T1.order_item_id  =  T2.order_item_id JOIN Shipments AS T3 ON T2.shipment_id  =  T3.shipment_id
+
+eval_err_num:41
+hard pred: SELECT DISTINCT p.product_name, p.product_color FROM Products p JOIN Order_Items oi ON p.product_id = oi.product_id JOIN Shipment_Items si ON oi.order_item_id = si.order_item_id JOIN Shipments s ON si.shipment_id = s.shipment_id;
+hard gold: SELECT T1.product_name ,  T1.product_color FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Shipment_Items AS T3 ON T2.order_item_id  =  T3.order_item_id JOIN Shipments AS T4 ON T3.shipment_id  =  T4.shipment_id
+
+eval_err_num:42
+hard pred: SELECT DISTINCT p.product_name, p.product_color FROM Products p JOIN Order_Items oi ON p.product_id = oi.product_id JOIN Shipment_Items si ON oi.order_item_id = si.order_item_id;
+hard gold: SELECT T1.product_name ,  T1.product_color FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Shipment_Items AS T3 ON T2.order_item_id  =  T3.order_item_id JOIN Shipments AS T4 ON T3.shipment_id  =  T4.shipment_id
+
+eval_err_num:43
+extra pred: SELECT DISTINCT p.product_name, p.product_price, p.product_description FROM Customers c JOIN Orders o ON c.customer_id = o.customer_id JOIN Order_Items oi ON o.order_id = oi.order_id JOIN Products p ON oi.product_id = p.product_id WHERE c.gender_code = 'Female';
+extra gold: SELECT DISTINCT T1.product_name ,  T1.product_price ,  T1.product_description FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Orders AS T3 ON T2.order_id  =  T3.order_id JOIN Customers AS T4 ON T3.customer_id  =  T4.customer_id WHERE T4.gender_code  =  'Female'
+
+eval_err_num:44
+extra pred: SELECT DISTINCT p.product_name, p.product_price, p.product_description FROM Customers c JOIN Orders o ON c.customer_id = o.customer_id JOIN Order_Items oi ON o.order_id = oi.order_id JOIN Products p ON oi.product_id = p.product_id WHERE c.gender_code = 'Female';
+extra gold: SELECT DISTINCT T1.product_name ,  T1.product_price ,  T1.product_description FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Orders AS T3 ON T2.order_id  =  T3.order_id JOIN Customers AS T4 ON T3.customer_id  =  T4.customer_id WHERE T4.gender_code  =  'Female'
+
+eval_err_num:45
+hard pred: SELECT DISTINCT i.invoice_status_code FROM Orders o JOIN Invoices i ON o.order_id = i.invoice_number WHERE o.order_id NOT IN (SELECT DISTINCT order_id FROM Shipments);
+hard gold: SELECT invoice_status_code FROM Invoices WHERE invoice_number NOT IN ( SELECT invoice_number FROM Shipments )
+
+eval_err_num:46
+hard pred: SELECT DISTINCT i.invoice_status_code FROM Invoices i WHERE i.invoice_number NOT IN (SELECT DISTINCT invoice_number FROM Shipments);
+hard gold: SELECT invoice_status_code FROM Invoices WHERE invoice_number NOT IN ( SELECT invoice_number FROM Shipments )
+
+eval_err_num:47
+hard pred: SELECT o.order_id, o.date_order_placed, SUM(p.product_price) as total_cost FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id JOIN Products p ON oi.product_id = p.product_id GROUP BY o.order_id, o.date_order_placed ORDER BY o.order_id;
+hard gold: select t1.order_id ,  t1.date_order_placed ,  sum(t3.product_price) from orders as t1 join order_items as t2 on t1.order_id  =  t2.order_id join products as t3 on t2.product_id  =  t3.product_id group by t1.order_id
+
+eval_err_num:48
+hard pred: SELECT o.order_id, o.date_order_placed, SUM(p.product_price) as total_amount_paid FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id JOIN Products p ON oi.product_id = p.product_id GROUP BY o.order_id, o.date_order_placed ORDER BY o.order_id;
+hard gold: SELECT T1.order_id ,  T1.date_order_placed ,  sum(T3.product_price) FROM Orders AS T1 JOIN Order_items AS T2 ON T1.order_id  =  T2.order_id JOIN Products AS T3 ON T2.product_id  =  T3.product_id GROUP BY T1.order_id
+
+                     easy                 medium               hard                 extra                all                 
+count                18                   26                   25                   11                   80                  
+=====================   EXECUTION ACCURACY     =====================
+execution            1.000                0.077                0.280                0.000                0.338               
+
+====================== EXACT MATCHING ACCURACY =====================
+exact match          1.000                0.077                0.280                0.000                0.338               
+
+---------------------PARTIAL MATCHING ACCURACY----------------------
+select               1.000                0.333                1.000                0.000                0.875               
+select(no AGG)       1.000                0.333                1.000                0.000                0.875               
+where                1.000                1.000                1.000                0.000                1.000               
+where(no OP)         1.000                1.000                1.000                0.000                1.000               
+group(no Having)     1.000                0.000                1.000                0.000                1.000               
+group                1.000                0.000                1.000                0.000                1.000               
+order                1.000                1.000                1.000                0.000                1.000               
+and/or               1.000                1.000                1.000                1.000                1.000               
+IUEN                 0.000                0.000                0.500                0.000                0.500               
+keywords             1.000                1.000                0.875                0.000                0.958               
+---------------------- PARTIAL MATCHING RECALL ----------------------
+select               1.000                0.077                0.320                0.000                0.350               
+select(no AGG)       1.000                0.077                0.320                0.000                0.350               
+where                1.000                0.333                0.500                0.000                0.500               
+where(no OP)         1.000                0.333                0.500                0.000                0.500               
+group(no Having)     1.000                0.000                0.364                0.000                0.276               
+group                1.000                0.000                0.364                0.000                0.276               
+order                1.000                1.000                0.750                0.000                0.667               
+and/or               1.000                1.000                1.000                1.000                1.000               
+IUEN                 0.000                0.000                0.250                0.000                0.111               
+keywords             1.000                0.250                0.333                0.000                0.383               
+---------------------- PARTIAL MATCHING F1 --------------------------
+select               1.000                0.125                0.485                1.000                0.500               
+select(no AGG)       1.000                0.125                0.485                1.000                0.500               
+where                1.000                0.500                0.667                1.000                0.667               
+where(no OP)         1.000                0.500                0.667                1.000                0.667               
+group(no Having)     1.000                1.000                0.533                1.000                0.432               
+group                1.000                1.000                0.533                1.000                0.432               
+order                1.000                1.000                0.857                1.000                0.800               
+and/or               1.000                1.000                1.000                1.000                1.000               
+IUEN                 1.000                1.000                0.333                1.000                0.182               
+keywords             1.000                0.400                0.483                1.000                0.548               

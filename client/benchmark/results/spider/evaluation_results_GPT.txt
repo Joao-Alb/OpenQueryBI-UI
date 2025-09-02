@@ -1,0 +1,91 @@
+eval_err_num:1
+easy pred: SELECT COUNT(*) AS club_count FROM club
+easy gold: SELECT count(*) FROM club
+
+eval_err_num:2
+easy pred: SELECT COUNT(*) AS club_count FROM club
+easy gold: SELECT count(*) FROM club
+
+eval_err_num:3
+medium pred: SELECT Name AS Club, Manager, Captain FROM club
+medium gold: SELECT Manager ,  Captain FROM club
+
+eval_err_num:4
+easy pred: SELECT Name FROM club WHERE Manufacturer <> 'Nike' OR Manufacturer IS NULL
+easy gold: SELECT Name FROM club WHERE Manufacturer != "Nike"
+
+easy pred: SELECT Name FROM player ORDER BY Wins_count ASC, Name ASC
+easy gold: SELECT Name FROM club WHERE Manufacturer != "Nike"
+
+easy pred: SELECT Name FROM player ORDER BY Wins_count ASC, Name ASC
+easy gold: SELECT Name FROM player ORDER BY Wins_count ASC
+
+easy pred: SELECT Name FROM player ORDER BY Earnings DESC LIMIT 1
+easy gold: SELECT Name FROM player ORDER BY Wins_count ASC
+
+medium pred: SELECT DISTINCT Country FROM player WHERE Earnings > 1200000
+medium gold: SELECT Name FROM player ORDER BY Earnings DESC LIMIT 1
+
+easy pred: SELECT Country FROM player WHERE Wins_count > 2 ORDER BY Earnings DESC LIMIT 1
+easy gold: SELECT DISTINCT Country FROM player WHERE Earnings  >  1200000
+
+hard pred: SELECT Country FROM player WHERE Wins_count > 2 ORDER BY Earnings DESCLIMIT 1
+hard gold: SELECT Country FROM player WHERE Wins_count  >  2 ORDER BY Earnings DESC LIMIT 1
+
+eval_err_num:5
+hard pred: SELECT p."Name" AS player_name, c."Name" AS club_name FROM player AS p JOIN club AS c ON p."Club_ID" = c."Club_ID"
+hard gold: SELECT Country FROM player WHERE Wins_count  >  2 ORDER BY Earnings DESC LIMIT 1
+
+eval_err_num:6
+medium pred: SELECT p.Name AS player_name, c.Name AS club_name FROM player AS p JOIN club AS c ON p.Club_ID = c.Club_ID
+medium gold: SELECT T2.Name ,  T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID
+
+eval_err_num:7
+medium pred: SELECT DISTINCT c."Name" FROM club c JOIN player p ON p."Club_ID" = c."Club_ID" WHERE p."Wins_count" > 2
+medium gold: SELECT T2.Name ,  T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID
+
+eval_err_num:8
+medium pred: SELECT DISTINCT c."Name" FROM club c JOIN player p ON p."Club_ID" = c."Club_ID" WHERE p."Wins_count" > 2
+medium gold: SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID WHERE T2.Wins_count  >  2
+
+                     easy                 medium               hard                 extra                all                 
+count                10                   7                    2                    0                    19                  
+=====================   EXECUTION ACCURACY     =====================
+execution            0.300                0.143                0.000                0.000                0.211               
+
+====================== EXACT MATCHING ACCURACY =====================
+exact match          0.300                0.286                0.000                0.000                0.263               
+
+---------------------PARTIAL MATCHING ACCURACY----------------------
+select               0.857                0.667                1.000                0.000                0.818               
+select(no AGG)       0.857                0.667                1.000                0.000                0.818               
+where                0.500                0.000                1.000                0.000                0.500               
+where(no OP)         0.500                0.000                1.000                0.000                0.500               
+group(no Having)     0.000                0.000                0.000                0.000                0.000               
+group                0.000                0.000                0.000                0.000                0.000               
+order                0.333                1.000                0.000                0.000                0.375               
+and/or               1.000                1.000                1.000                0.000                1.000               
+IUEN                 0.000                0.000                0.000                0.000                0.000               
+keywords             0.571                0.500                0.000                0.000                0.500               
+---------------------- PARTIAL MATCHING RECALL ----------------------
+select               0.600                0.286                0.500                0.000                0.474               
+select(no AGG)       0.600                0.286                0.500                0.000                0.474               
+where                0.250                0.000                0.500                0.000                0.286               
+where(no OP)         0.250                0.000                0.500                0.000                0.286               
+group(no Having)     0.000                0.000                0.000                0.000                0.000               
+group                0.000                0.000                0.000                0.000                0.000               
+order                0.500                0.500                0.000                0.000                0.375               
+and/or               1.000                1.000                1.000                0.000                1.000               
+IUEN                 0.000                0.000                0.000                0.000                0.000               
+keywords             0.500                0.333                0.000                0.000                0.385               
+---------------------- PARTIAL MATCHING F1 --------------------------
+select               0.706                0.400                0.667                0.000                0.600               
+select(no AGG)       0.706                0.400                0.667                0.000                0.600               
+where                0.333                1.000                0.667                0.000                0.364               
+where(no OP)         0.333                1.000                0.667                0.000                0.364               
+group(no Having)     1.000                1.000                1.000                0.000                1.000               
+group                1.000                1.000                1.000                0.000                1.000               
+order                0.400                0.667                1.000                0.000                0.375               
+and/or               1.000                1.000                1.000                0.000                1.000               
+IUEN                 1.000                1.000                1.000                0.000                1.000               
+keywords             0.533                0.400                1.000                0.000                0.435               

@@ -1,0 +1,71 @@
+eval_err_num:1
+easy pred: SELECT COUNT(*) AS total_clubs FROM club;
+easy gold: SELECT count(*) FROM club
+
+eval_err_num:2
+easy pred: SELECT COUNT(*) AS club_count FROM club;
+easy gold: SELECT count(*) FROM club
+
+medium pred: SELECT Name, Manager, Captain FROM club;
+medium gold: SELECT Manager ,  Captain FROM club
+
+medium pred: SELECT Name, Manager, Captain FROM club;
+medium gold: SELECT Manager ,  Captain FROM club
+
+eval_err_num:3
+medium pred: SELECT p.Name as player_name, c.Name as club_name FROM player p JOIN club c ON p.Club_ID = c.Club_ID;
+medium gold: SELECT T2.Name ,  T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID
+
+eval_err_num:4
+medium pred: SELECT p.Name as player_name, c.Name as club_name FROM player p JOIN club c ON p.Club_ID = c.Club_ID;
+medium gold: SELECT T2.Name ,  T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID
+
+eval_err_num:5
+medium pred: SELECT DISTINCT c.Name FROM club c INNER JOIN player p ON c.Club_ID = p.Club_ID WHERE p.Wins_count > 2;
+medium gold: SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID WHERE T2.Wins_count  >  2
+
+eval_err_num:6
+medium pred: SELECT DISTINCT c.Name FROM club c INNER JOIN player p ON c.Club_ID = p.Club_ID WHERE p.Wins_count > 2;
+medium gold: SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID WHERE T2.Wins_count  >  2
+
+                     easy                 medium               hard                 extra                all                 
+count                10                   8                    2                    0                    20                  
+=====================   EXECUTION ACCURACY     =====================
+execution            0.800                0.250                1.000                0.000                0.600               
+
+====================== EXACT MATCHING ACCURACY =====================
+exact match          0.800                0.250                1.000                0.000                0.600               
+
+---------------------PARTIAL MATCHING ACCURACY----------------------
+select               1.000                0.500                1.000                0.000                0.857               
+select(no AGG)       1.000                0.500                1.000                0.000                0.857               
+where                1.000                0.000                1.000                0.000                1.000               
+where(no OP)         1.000                0.000                1.000                0.000                1.000               
+group(no Having)     0.000                0.000                0.000                0.000                0.000               
+group                0.000                0.000                0.000                0.000                0.000               
+order                1.000                1.000                1.000                0.000                1.000               
+and/or               1.000                1.000                1.000                0.000                1.000               
+IUEN                 0.000                0.000                0.000                0.000                0.000               
+keywords             1.000                1.000                1.000                0.000                1.000               
+---------------------- PARTIAL MATCHING RECALL ----------------------
+select               0.800                0.250                1.000                0.000                0.600               
+select(no AGG)       0.800                0.250                1.000                0.000                0.600               
+where                1.000                0.000                1.000                0.000                0.750               
+where(no OP)         1.000                0.000                1.000                0.000                0.750               
+group(no Having)     0.000                0.000                0.000                0.000                0.000               
+group                0.000                0.000                0.000                0.000                0.000               
+order                1.000                1.000                1.000                0.000                1.000               
+and/or               1.000                1.000                1.000                0.000                1.000               
+IUEN                 0.000                0.000                0.000                0.000                0.000               
+keywords             1.000                0.500                1.000                0.000                0.857               
+---------------------- PARTIAL MATCHING F1 --------------------------
+select               0.889                0.333                1.000                0.000                0.706               
+select(no AGG)       0.889                0.333                1.000                0.000                0.706               
+where                1.000                1.000                1.000                0.000                0.857               
+where(no OP)         1.000                1.000                1.000                0.000                0.857               
+group(no Having)     1.000                1.000                1.000                0.000                1.000               
+group                1.000                1.000                1.000                0.000                1.000               
+order                1.000                1.000                1.000                0.000                1.000               
+and/or               1.000                1.000                1.000                0.000                1.000               
+IUEN                 1.000                1.000                1.000                0.000                1.000               
+keywords             1.000                0.667                1.000                0.000                0.923               

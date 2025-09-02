@@ -1,0 +1,87 @@
+medium pred: SELECT Name FROM player WHERE Earnings = (SELECT MAX(Earnings) FROM player);
+medium gold: SELECT Name FROM player ORDER BY Earnings DESC LIMIT 1
+
+medium pred: SELECT Name FROM player WHERE Earnings = (SELECT MAX(Earnings) FROM player);
+medium gold: SELECT Name FROM player ORDER BY Earnings DESC LIMIT 1
+
+hard pred: SELECT T1.Name FROM club AS T1 EXCEPT SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID = T2.Club_ID;
+hard gold: SELECT Name FROM club WHERE Club_ID NOT IN (SELECT Club_ID FROM player)
+
+hard pred: SELECT Name FROM club EXCEPT SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID = T2.Club_ID;
+hard gold: SELECT Name FROM club WHERE Club_ID NOT IN (SELECT Club_ID FROM player)
+
+hard pred: SELECT Country FROM player WHERE Earnings > 1400000 UNION SELECT Country FROM player WHERE Earnings < 1100000;
+hard gold: SELECT Country FROM player WHERE Earnings  >  1400000 INTERSECT SELECT Country FROM player WHERE Earnings  <  1100000
+
+eval_err_num:1
+hard pred: SELECT T1.product_id, T1.product_name, T1.product_price, T1.product_color FROM Products AS T1 LEFT JOIN Order_Items AS T2 ON T1.product_id = T2.product_id GROUP BY T1.product_id HAVING count(T2.order_id) < 2;
+hard gold: select t1.product_id ,  t1.product_name ,  t1.product_price ,  t1.product_color from products as t1 join order_items as t2 on t1.product_id  =  t2.product_id join orders as t3 on t2.order_id  =  t3.order_id group by t1.product_id having count(*) < 2
+
+medium pred: SELECT T1.order_id, T1.date_order_placed FROM Orders AS T1 JOIN Order_Items AS T2 ON T1.order_id = T2.order_id GROUP BY T1.order_id, T1.date_order_placed HAVING count(*) >= 2;
+medium gold: SELECT T1.order_id ,  T1.date_order_placed FROM Orders AS T1 JOIN Order_items AS T2 ON T1.order_id  =  T2.order_id GROUP BY T1.order_id HAVING count(*)  >=  2
+
+extra pred: SELECT T1.product_id, T1.product_name, T1.product_price FROM Products AS T1 JOIN Order_Items AS T2 ON T1.product_id = T2.product_id GROUP BY T1.product_id HAVING count(*) = (SELECT count(*) FROM Order_Items AS T3 GROUP BY T3.product_id ORDER BY count(*) DESC LIMIT 1);
+extra gold: SELECT T1.product_id ,  T1.product_name ,  T1.product_price FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id GROUP BY T1.product_id ORDER BY count(*) DESC LIMIT 1
+
+extra pred: SELECT T1.order_id, SUM(T3.product_price) FROM Orders AS T1 JOIN Order_Items AS T2 ON T1.order_id = T2.order_id JOIN Products AS T3 ON T2.product_id = T3.product_id GROUP BY T1.order_id ORDER BY SUM(T3.product_price) LIMIT 1;
+extra gold: SELECT T1.order_id ,  sum(T2.product_price) FROM Order_items AS T1 JOIN Products AS T2 ON T1.product_id  =  T2.product_id GROUP BY T1.order_id ORDER BY sum(T2.product_price) ASC LIMIT 1
+
+eval_err_num:2
+extra pred: SELECT T1.order_id ,  MIN(total_cost) FROM (SELECT T1.order_id ,  SUM(T3.product_price) AS total_cost FROM Orders AS T1 JOIN Order_Items AS T2 ON T1.order_id  =  T2.order_id JOIN Products AS T3 ON T2.product_id  =  T3.product_id GROUP BY T1.order_id) AS T1;
+extra gold: select t1.order_id ,  sum(t2.product_price) from order_items as t1 join products as t2 on t1.product_id  =  t2.product_id group by t1.order_id order by sum(t2.product_price) asc limit 1
+
+eval_err_num:3
+medium pred: SELECT T1.invoice_status_code, T1.invoice_date, T2.shipment_date FROM Invoices AS T1 LEFT JOIN Shipments AS T2 ON T1.invoice_number = T2.invoice_number;
+medium gold: SELECT T1.invoice_status_code ,  T1.invoice_date ,  T2.shipment_date FROM Invoices AS T1 JOIN Shipments AS T2 ON T1.invoice_number  =  T2.invoice_number
+
+hard pred: SELECT T1.product_name, T1.product_color FROM Products AS T1 JOIN Order_Items AS T2 ON T1.product_id = T2.product_id JOIN Shipment_Items AS T3 ON T2.order_item_id = T3.order_item_id;
+hard gold: SELECT T1.product_name ,  T1.product_color FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Shipment_Items AS T3 ON T2.order_item_id  =  T3.order_item_id JOIN Shipments AS T4 ON T3.shipment_id  =  T4.shipment_id
+
+hard pred: SELECT DISTINCT T1.product_name, T1.product_color FROM Products AS T1 JOIN Order_Items AS T2 ON T1.product_id = T2.product_id JOIN Shipment_Items AS T3 ON T2.order_item_id = T3.order_item_id;
+hard gold: SELECT T1.product_name ,  T1.product_color FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Shipment_Items AS T3 ON T2.order_item_id  =  T3.order_item_id JOIN Shipments AS T4 ON T3.shipment_id  =  T4.shipment_id
+
+eval_err_num:4
+hard pred: SELECT T3.invoice_status_code FROM Orders AS T1 LEFT JOIN Shipments AS T2 ON T1.order_id = T2.order_id LEFT JOIN Invoices AS T3 ON T2.invoice_number = T3.invoice_number WHERE T2.shipment_date IS NULL;
+hard gold: SELECT invoice_status_code FROM Invoices WHERE invoice_number NOT IN ( SELECT invoice_number FROM Shipments )
+
+                     easy                 medium               hard                 extra                all                 
+count                18                   26                   25                   11                   80                  
+=====================   EXECUTION ACCURACY     =====================
+execution            1.000                0.962                0.800                0.818                0.900               
+
+====================== EXACT MATCHING ACCURACY =====================
+exact match          1.000                0.846                0.720                0.727                0.825               
+
+---------------------PARTIAL MATCHING ACCURACY----------------------
+select               1.000                1.000                1.000                1.000                1.000               
+select(no AGG)       1.000                1.000                1.000                1.000                1.000               
+where                1.000                0.750                1.000                1.000                0.895               
+where(no OP)         1.000                0.750                1.000                1.000                0.895               
+group(no Having)     1.000                0.875                1.000                1.000                0.963               
+group                1.000                0.875                1.000                0.800                0.926               
+order                1.000                0.000                1.000                1.000                1.000               
+and/or               1.000                1.000                1.000                1.000                1.000               
+IUEN                 0.000                0.000                0.500                1.000                0.727               
+keywords             1.000                0.875                0.842                0.900                0.895               
+---------------------- PARTIAL MATCHING RECALL ----------------------
+select               1.000                0.962                0.920                0.909                0.950               
+select(no AGG)       1.000                0.962                0.920                0.909                0.950               
+where                1.000                1.000                0.625                1.000                0.850               
+where(no OP)         1.000                1.000                0.625                1.000                0.850               
+group(no Having)     1.000                0.875                0.909                0.833                0.897               
+group                1.000                0.875                0.909                0.667                0.862               
+order                1.000                0.000                1.000                0.500                0.778               
+and/or               1.000                1.000                1.000                1.000                1.000               
+IUEN                 0.000                0.000                0.750                1.000                0.889               
+keywords             1.000                0.875                0.762                0.818                0.850               
+---------------------- PARTIAL MATCHING F1 --------------------------
+select               1.000                0.980                0.958                0.952                0.974               
+select(no AGG)       1.000                0.980                0.958                0.952                0.974               
+where                1.000                0.857                0.769                1.000                0.872               
+where(no OP)         1.000                0.857                0.769                1.000                0.872               
+group(no Having)     1.000                0.875                0.952                0.909                0.929               
+group                1.000                0.875                0.952                0.727                0.893               
+order                1.000                1.000                1.000                0.667                0.875               
+and/or               1.000                1.000                1.000                1.000                1.000               
+IUEN                 1.000                1.000                0.600                1.000                0.800               
+keywords             1.000                0.875                0.800                0.857                0.872               
