@@ -34,8 +34,8 @@ Considering these guidelines, perform the following workflow to answer the user'
 ####
 Few-shot examples of queries. Please consider them when writing your SQL queries, but adapt it to the tables and questions made to you.
 
-User: "Show names of players and names of clubs they are in.".
-Query: "SELECT T2.Name ,  T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID";
+User: "List the id, first name and last name of the customers who both have placed more than 2 orders and have bought at least 3 items."
+Query: SELECT T1.customer_id ,  T1.customer_first_name ,  T1.customer_last_name FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id GROUP BY T1.customer_id HAVING count(*)  >  2 INTERSECT SELECT T1.customer_id ,  T1.customer_first_name ,  T1.customer_last_name FROM Customers AS T1 JOIN Orders AS T2 ON T1.customer_id  =  T2.customer_id JOIN Order_items AS T3 ON T2.order_id  =  T3.order_id GROUP BY T1.customer_id HAVING count(*)  >= 3;
 
 User: "List the dates of the orders which were placed at the earliest time or have more than 1 items."
 Query: SELECT min(date_order_placed) FROM Orders UNION SELECT T1.date_order_placed FROM Orders AS T1 JOIN Order_items AS T2 ON T1.order_id  =  T2.order_id GROUP BY T1.order_id HAVING count(*)  >  1;
