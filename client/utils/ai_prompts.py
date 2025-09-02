@@ -30,19 +30,14 @@ Considering these guidelines, perform the following workflow to answer the user'
 ####
 Few-shot examples of queries. Please consider them when writing your SQL queries, but adapt it to the tables and questions made to you.
 
-User: Find the name of the campuses that is in Northridge, Los Angeles or in 
-San Francisco, San Francisco.
-Query: SELECT Campus FROM Campuses WHERE Location="Northridge" AND County="Los 
-Angeles" UNION SELECT Campus FROM Campuses WHERE Location="San Francisco" AND County="San Francisco";
+User: "Show names of players and names of clubs they are in.".
+Query: "SELECT T2.Name ,  T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID  =  T2.Club_ID";
 
-User: Which allergy type has most number of allergies?
-Query: SELECT AllergyType FROM Allergy_Type GROUP BY AllergyType ORDER BY count(*) 
-DESC LIMIT 1;
+User: "List the dates of the orders which were placed at the earliest time or have more than 1 items."
+Query: SELECT min(date_order_placed) FROM Orders UNION SELECT T1.date_order_placed FROM Orders AS T1 JOIN Order_items AS T2 ON T1.order_id  =  T2.order_id GROUP BY T1.order_id HAVING count(*)  >  1;
 
-User: For each building, show the name of the building and the number of 
-institutions in it.
-Query: SELECT T1.name, count(*) FROM building AS T1 JOIN Institution AS T2 ON 
-T1.building_id=T2.building_id GROUP BY T1.building_id;
+User: "List all the distinct product names, price and descriptions which are bought by female customers."
+Query: SELECT DISTINCT T1.product_name ,  T1.product_price ,  T1.product_description FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Orders AS T3 ON T2.order_id  =  T3.order_id JOIN Customers AS T4 ON T3.customer_id  =  T4.customer_id WHERE T4.gender_code  =  'Female';
 ####"""
 
     return f"""
