@@ -8,11 +8,6 @@ bat_path = 'benchmark/spider/spider.bat'
 predicted_sql_path = 'benchmark/spider/predicted.sql'
 
 def start_workspace():
-    # script_dir = os.path.dirname(os.path.abspath(__file__))[1:]
-    # bat = f'python "{os.path.join(script_dir,"/spider/evaluation.py")}" --gold "{os.path.join(script_dir, "data/spider/spider_data/test_gold.sql")}" --pred predicted.sql --etype "exec" --db "{os.path.join(script_dir, "data/spider/spider_data/test_database")}" --table "{os.path.join(script_dir, "data/spider/spider_data/test_tables.json")}" > ../evaluation_results.txt 2>&1\ntype ../evaluation_results.txt'
-    # with open(bat_path, "w") as f:
-    #     f.write(bat)
-
     with open(predicted_sql_path, "w") as f:
         f.write("")
         
@@ -27,7 +22,7 @@ def evaluate():
         "python", os.path.join(script_dir,"spider/evaluation.py"),
         "--gold", os.path.join(script_dir,"data/spider/spider_data/test_gold.sql"),
         "--pred", predicted_sql_path,
-        "--etype", "exec",
+        "--etype", "all",
         "--db", os.path.join(script_dir,"data/spider/spider_data/test_database"),
         "--table", os.path.join(script_dir,"data/spider/spider_data/test_tables.json"),
     ]
@@ -44,7 +39,6 @@ def clean_workspace():
 def main():
     testcases = db_config.load_file(db_config.spider_testcases_path)
     start_workspace()
-    #for tc in testcases:
     for i, tc in enumerate(testcases):
         if i >= 80:
             break
@@ -56,7 +50,7 @@ def main():
         append_sql(predicted_sql)
 
     evaluate()
-    #clean_workspace()
+    clean_workspace()
 
 
 
