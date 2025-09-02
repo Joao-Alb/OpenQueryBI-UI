@@ -21,6 +21,7 @@ Follow these guidelines:
 - Do not spend to much on tokens, try to be as concise and objective as possible. Keep in mind that no one will read your reasoning, only the last SQL query you provided in the validate_query tool. This is a expensive benchmark, so try to be as efficient as possible.
 - You can use the validate_query tool multiple times (if needed), but only the last query will be considered. If your first query is correct, you don't need to use the validate_query tool again.
 - Please consider a maximum of 4 attempts to get the correct query. Don't get stuck in an infinite loop.
+- Always match the exact columns, aliases, and SQL structure you would expect in a Spider gold query. Avoid adding extra columns or DISTINCT unless explicitly required. Use UNION, INTERSECT, and EXCEPT exactly as needed. Column order matters.
 Considering these guidelines, perform the following workflow to answer the user's question:
 1. Read and understand the user's question.
 2. Get the list of available database tables and their columns using the get_databases MCP tool from OpenQueryBI.
