@@ -3,10 +3,14 @@ import streamlit as st
 from services.mcp_service import run_agent
 from utils.ai_prompts import make_main_prompt
 from langchain_core.messages import ToolMessage
+import json
 
 def get_sql_from_ai(prompt:str)->str:
     prompt = make_main_prompt(prompt,language='spider-benchmark')
     ans = run_async(run_agent(st.session_state.agent, prompt))
+        #export result of requests to a file for debugging
+    with open("last_ai_response.json", "w") as f:
+        json.dump(str(ans), f, indent=4)
     return find_sql_in_text(ans)
 
 def find_sql_in_text(response)->str:
