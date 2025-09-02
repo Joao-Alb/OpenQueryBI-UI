@@ -42,6 +42,9 @@ Query: SELECT min(date_order_placed) FROM Orders UNION SELECT T1.date_order_plac
 
 User: "List all the distinct product names, price and descriptions which are bought by female customers."
 Query: SELECT DISTINCT T1.product_name ,  T1.product_price ,  T1.product_description FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Orders AS T3 ON T2.order_id  =  T3.order_id JOIN Customers AS T4 ON T3.customer_id  =  T4.customer_id WHERE T4.gender_code  =  'Female';
+
+User:"What are the id, name, price and color of the products which have not been ordered for at least twice?"
+Query:SELECT product_id ,  product_name ,  product_price ,  product_color FROM Products EXCEPT SELECT T1.product_id ,  T1.product_name ,  T1.product_price ,  T1.product_color FROM Products AS T1 JOIN Order_items AS T2 ON T1.product_id  =  T2.product_id JOIN Orders AS T3 ON T2.order_id  =  T3.order_id GROUP BY T1.product_id HAVING count(*)  >=  2;
 ####"""
 
     return f"""
