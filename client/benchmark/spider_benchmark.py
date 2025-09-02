@@ -52,6 +52,7 @@ def main():
         predicted_sql = get_sql_from_ai(tc['question'])
         if not predicted_sql.endswith(";"):
             predicted_sql += ";"
+        predicted_sql = predicted_sql.replace("\n"," ")
         append_sql(predicted_sql)
 
     evaluate()
