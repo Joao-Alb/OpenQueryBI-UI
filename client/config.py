@@ -9,7 +9,7 @@ env = os.getenv
 # Model mapping
 MODEL_OPTIONS = {
     'Anthropic': 'claude-sonnet-4-20250514',
-    'OpenAI': 'gpt-5-nano',
+    'OpenAI': 'gpt-5',
     'Google': 'gemini-2.0-flash-001',
     'Bedrock': 'us.anthropic.claude-3-7-sonnet-20250219-v1:0'
     }
@@ -19,7 +19,7 @@ AVAILABLE_PROVIDERS = [provider for provider in MODEL_OPTIONS.keys() if (has_env
 
 # Streamlit defaults
 DEFAULT_MAX_TOKENS = 4096
-DEFAULT_TEMPERATURE = 0.2
+DEFAULT_TEMPERATURE = 0
 
 # Load server configuration
 config_path = os.path.join('.', 'servers_config.json')
