@@ -11,6 +11,7 @@ import ui_components.sidebar_components as sd_compents
 from  ui_components.main_components import display_tool_executions,format_ai_output, Graph, display_graph_history
 from config import DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE
 import traceback
+from services.plot_service import get_plot_info
 
 def main():
 
@@ -116,7 +117,8 @@ def main():
                                         st.code(tool_message, language='yaml')
                                     _append_message_to_session({'role': 'assistant', 'tool': tool_message, })
                                     if "plot_from_sql" in msg.name:
-                                        graph = Graph(json.loads(msg.content))
+                                        plot_data = get_plot_info(json.loads(str(msg.content))["plot_id"])
+                                        graph = Graph(plot_data)
                                         st.session_state.graphs.append(graph)
                                         st.divider()
                                         graph.plot_from_sql()
