@@ -54,6 +54,6 @@ def main():
             break
         db_config.set_databases([tc['db_id']])
         answers.append((tc['question'],get_msgs_from_ai(tc['question'])))
-    with open(os.path.join("client", "benchmark","results","intratextual","evaluation_intratextual.txt"), "w", encoding="utf-8") as f:
+    with open(os.path.join(os.path.dirname(__file__),"results","intratextual","evaluation_intratextual.txt"), "w", encoding="utf-8") as f:
         results = evaluate(answers)
         f.write(report(results))
