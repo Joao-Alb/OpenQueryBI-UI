@@ -33,10 +33,14 @@ def create_history_chat_container():
 def create_benchmark_button():
     if st.session_state.benchmark["status"]:
         with st.sidebar:
-            benchmark_button = st.button("Start Benchmarking")
-            if benchmark_button:
+            spider_benchmark_button = st.button("Start Spider Benchmark")
+            if spider_benchmark_button:
                 from benchmark import spider_benchmark
                 spider_benchmark.main()
+            text_benchmark_button = st.button("Start Text Benchmark")
+            if text_benchmark_button:
+                from benchmark import intratextual_benchmark
+                intratextual_benchmark.main()
 
 def create_sidebar_chat_buttons():
     with st.sidebar:

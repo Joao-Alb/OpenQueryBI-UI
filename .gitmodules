@@ -4,3 +4,6 @@
 [submodule "client/benchmark/spider"]
 	path = client/benchmark/spider
 	url = https://github.com/taoyds/spider
+[submodule "client/benchmark/distinct_n"]
+	path = client/benchmark/distinct_n
+	url = https://github.com/neural-dialogue-metrics/Distinct-N.git
