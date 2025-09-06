@@ -55,7 +55,8 @@ Considering these guidelines, perform the following workflow to answer the user'
 1. Read and understand the user's question.
 2. Get the list of available database tables and their columns using the get_databases MCP tool from OpenQueryBI.
 3. Write a SQL query to answer the user's question using the available tables and columns. Please consider that the best queries are the most efficient ones. 
-4. Validate your SQL query using the validate_query MCP tool from OpenQueryBI.If the query is correct, end the workflow here. If the query is incorrect, go back to step 3 and try to write a better SQL query.
+4. Validate your SQL query using the validate_query MCP tool from OpenQueryBI. If the query is incorrect, go back to step 3 and try to write a better SQL query.
+5. If necessary, generate a plot using the plot_data tool with the results of your validated SQL query. Remember to always validate your SQL query before trying to generate plots with the results. Always use plotting functions only once per task, avoiding redundant graphs. Please use the same query you validated in the previous step to generate the plot.
 ####
 Few-shot examples of queries. Please consider them when writing your SQL queries, but adapt it to the tables and questions made to you.
 
