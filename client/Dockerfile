@@ -23,4 +23,4 @@ COPY . .
 EXPOSE 8080
 
 # Run Streamlit binding to $PORT and 0.0.0.0 (important!)
-CMD ["sh", "-c", "streamlit run app.py --server.port=$PORT --server.address=0.0.0.0"]
+CMD ["bash", "-c", "streamlit run app.py --server.port=$PORT --server.address=0.0.0.0"]
