@@ -98,13 +98,13 @@ def create_provider_select_widget():
 
 def create_advanced_configuration_widget():
     params = st.session_state["params"]
-    with st.sidebar.expander("⚙️  Basic config", expanded=False):
-        params['max_tokens'] = st.number_input("Max tokens",
-                                    min_value=1024,
-                                    max_value=10240,
-                                    value=4096,
-                                    step=512,)
-        params['temperature'] = st.slider("Temperature", 0.0, 1.0, step=0.05, value=DEFAULT_TEMPERATURE)
+    #with st.sidebar.expander("⚙️  Basic config", expanded=False):
+        #params['max_tokens'] = st.number_input("Max tokens",
+                                    # min_value=1024,
+                                    # max_value=10240,
+                                    # value=4096,
+                                    # step=512,)
+        # params['temperature'] = st.slider("Temperature", 0.0, 1.0, step=0.05, value=DEFAULT_TEMPERATURE)
                 
 def create_mcp_connection_widget():
     with st.sidebar:
