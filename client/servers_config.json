@@ -2,7 +2,7 @@
   "mcpServers": {
     "OpenQueryBI": {
       "transport": "sse",
-      "url": "https://openquerybi-production.up.railway.app/sse",
+      "url": "http://openquerybi:8002/sse",
       "timeout": 600,
       "headers": null,
       "sse_read_timeout": 900
