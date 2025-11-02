@@ -54,7 +54,7 @@ def connect_to_mcp_servers():
     params = st.session_state['params']
     llm_provider = params.get("model_id")
     try:
-        llm = create_llm_model(llm_provider, temperature=params['temperature'], max_tokens=params['max_tokens'])
+        llm = create_llm_model(llm_provider, temperature=params.get('temperature',0), max_tokens=params.get('max_tokens',4069))
     except Exception as e:
         st.error(f"Failed to initialize LLM: {e}")
         st.stop()

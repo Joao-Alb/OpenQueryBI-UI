@@ -44,8 +44,8 @@ def format_ai_output(content:list)->str:
         if message["type"] == "text":
             formated += message['text']+"\n\n\n\n"
         elif message["type"] == "tool_use":
-            formated += f"Using tool {message['name']} with the following inputs: {message['input']}\n"
-    return formated or "didnt work"
+            pass
+    return formated
 
 import pandas as pd 
 from sqlalchemy import create_engine,text
