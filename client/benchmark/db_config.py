@@ -12,7 +12,7 @@ def load_file(databases_path):
 
 def save_mcp_databases(databases:list):
     body = databases
-    r = requests.post("http://openquerybi:8001/databases/", json=body)
+    r = requests.post("http://openquerybi:8001/databases", json=body)
 
 def set_databases(databases_ids:list[str]):
     spider = load_file(spider_databases_path)
