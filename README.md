@@ -54,7 +54,7 @@ Refer to `servers/OpenQueryBI/README.md` (included in the repository) for deep-d
 
 ## Key components and contracts
 
-- FastAPI HTTP API (`servers/OpenQueryBI/api.py`): handles endpoints like `POST /databases/`, `POST /ai/`, `GET /plots/{plot_id}`.
+- FastAPI HTTP API (`servers/OpenQueryBI/api.py`): handles endpoints like `POST /databases`, `POST /ai/`, `GET /plots/{plot_id}`.
 - MCP server (`servers/OpenQueryBI/main.py`): exposes tools for the AI agent and clients (SSE transport by default) like `validate_query` and `plot_from_sql`.
 - `databases.json`: JSON array with database definitions used to connect to SQL databases.
 - `plot_info.json`: a map of `plot_id` -> metadata describing plots generated via `plot_from_sql`.
@@ -170,13 +170,13 @@ Make sure file permissions protect credentials when present. In production, cons
 
 Typical endpoints (implemented in `servers/OpenQueryBI/api.py`):
 
-- POST `/databases/` — overwrite the databases config (body: JSON array of database entries). Server writes `databases.json` using `utils.save_databases_info`.
+- POST `/databases` — overwrite the databases config (body: JSON array of database entries). Server writes `databases.json` using `utils.save_databases_info`.
 - GET `/plots/{plot_id}` — fetch plot metadata previously created by `plot_from_sql`.
 
 Example: register databases with curl
 
 ```bash
-curl -X POST http://localhost:8000/databases/ \
+curl -X POST http://localhost:8000/databases \
   -H "Content-Type: application/json" \
   -d @servers/OpenQueryBI/databases.json
 ```
@@ -293,7 +293,7 @@ uvicorn app:app --reload --host 0.0.0.0 --port 8001
 Register databases (curl):
 
 ```bash
-curl -X POST http://localhost:8000/databases/ \
+curl -X POST http://localhost:8000/databases \
   -H "Content-Type: application/json" \
   -d @servers/OpenQueryBI/databases.json
 ```
